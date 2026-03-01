@@ -31,7 +31,7 @@ Sistemi kurdunuz, şimdi her şeyin yolunda olup olmadığını anlamak için sa
 
 1. Açık olan terminal penceresine şu komutu yazın ve **Enter**'a basın:
    ```powershell
-   powershell.exe -ExecutionPolicy Bypass -File .	est_webhook.ps1
+   powershell.exe -ExecutionPolicy Bypass -File ./test_webhook.ps1
    ```
 2. Ekranda **"OK - Tamamlandi!"** yazısını görmelisiniz.
 3. Şimdi proje klasörünüze bakın. `order_123456789_... .txt` isimli yeni bir dosya oluşmuş olmalı.
