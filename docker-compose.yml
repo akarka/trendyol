@@ -1,0 +1,18 @@
+services:
+  print-relay:
+    build: .
+    container_name: trendyol-print-relay
+    restart: unless-stopped
+    ports:
+      - "8080:8080" # Webhook Tester port
+    env_file:
+      - .env
+    environment:
+      LOG_LEVEL: "info"
+    volumes:
+      - .:/app # Corrected mapping to see generated files in your local folder
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
