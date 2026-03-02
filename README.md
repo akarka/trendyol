@@ -1,10 +1,10 @@
-# Trendyol Sipariş Yazdırma Sistemi 🚀
+# Trendyol Sipariş Yazdırma Sistemi 
 
 Bu yazılım, Trendyol mağazanıza gelen siparişleri otomatik olarak yakalar ve bilgisayarınıza bağlı termal yazıcıdan (veya dijital olarak dosya halinde) çıktı almanızı sağlar.
 
 ---
 
-## 🛠️ Kurulum Adımları (Sıfırdan Başlayanlar İçin)
+## Kurulum Adımları (Sıfırdan Başlayanlar İçin)
 
 ### 1. Docker Kurulumu
 Bu sistemin çalışması için bilgisayarınızda **Docker Desktop** yüklü olmalıdır.
@@ -13,11 +13,25 @@ Bu sistemin çalışması için bilgisayarınızda **Docker Desktop** yüklü ol
 3. Kurulum bitince bilgisayarınızı yeniden başlatın.
 4. Docker Desktop uygulamasını açın ve sağ üstte yeşil bir kutucuk (Running) görene kadar bekleyin.
 
-### 2. Sistemi Başlatma
-1. Bu proje klasörünü bilgisayarınızda bir yere koyun.
+### 2. Git Kurulumu
+Bu sistemi bilgisayarınıza indirmek ve güncellemeleri almak için Git gereklidir.
+1. [Git for Windows İndir](https://git-scm.com/download/win) adresine gidin.
+2. "64-bit Git for Windows Setup" seçeneğine tıklayarak indirin.
+3. Kurulum sırasında karşınıza çıkan tüm seçenekleri varsayılan (Default) haliyle bırakarak "Next" diyerek tamamlayın.
+
+### 3. Sistemi Bilgisayara İndirme ve Başlatma
+1. Bilgisayarınızda projeyi kurmak istediğiniz klasöre gidin (örneğin: `C:\Projeler`).
 2. Klasörün içindeyken klavyenizden **Shift** tuşuna basılı tutun ve boş bir yere **sağ tıklayın**.
 3. "PowerShell penceresini buradan açın" (veya "Terminali burada aç") seçeneğine tıklayın.
-4. Açılan mavi/siyah ekrana şu komutu yapıştırın ve **Enter**'a basın:
+4. Açılan siyah ekrana şu komutu yapıştırın ve **Enter**'a basın (bu, dosyaları internetten çeker):
+   ```powershell
+   git clone https://github.com/akarka/trendyol.git
+   ```
+5. İndirme bitince şu komutla klasörün içine girin:
+   ```powershell
+   cd trendyol
+   ```
+6. Son olarak sistemi başlatmak için şu komutu yazın:
    ```powershell
    docker-compose up -d --build
    ```
@@ -25,7 +39,7 @@ Bu sistemin çalışması için bilgisayarınızda **Docker Desktop** yüklü ol
 
 ---
 
-## 🧪 Sistemin Çalıştığını Test Etme
+## Sistemin Çalıştığını Test Etme
 
 Sistemi kurdunuz, şimdi her şeyin yolunda olup olmadığını anlamak için sahte bir sipariş gönderelim:
 
@@ -39,7 +53,7 @@ Sistemi kurdunuz, şimdi her şeyin yolunda olup olmadığını anlamak için sa
 
 ---
 
-## 📖 Sıkça Sorulan Sorular
+## Sıkça Sorulan Sorular
 
 **Soru: Bilgisayarı kapatıp açınca ne yapmalıyım?**  
 Cevap: Docker Desktop'ın açık olduğundan emin olun. Sistem otomatik olarak kaldığı yerden devam edecektir. Eğer çalışmazsa yukarıdaki "Sistemi Başlatma" adımındaki komutu tekrar yazmanız yeterlidir.
@@ -51,4 +65,4 @@ Cevap: Tüm sipariş çıktıları bu klasörün içinde `.txt` dosyası olarak 
 Cevap: Teknik destek ekibimizle iletişime geçerek `docker-compose.yml` dosyasındaki yazıcı yolunu (`/dev/usb/lp0` gibi) kendi yazıcınıza göre güncelletmeniz yeterlidir.
 
 ---
-*Hazırlayan: Trendyol Print Relay Team*
+*Hazırlayan: Zze*
