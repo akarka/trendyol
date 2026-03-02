@@ -1,6 +1,6 @@
 # Trendyol Sipariş Yazdırma Sistemi 
 
-Bu yazılım, Trendyol mağazanıza gelen siparişleri otomatik olarak yakalar ve bilgisayarınıza bağlı termal yazıcıdan (veya dijital olarak dosya halinde) çıktı almanızı sağlar.
+Bu yazılım, Trendyol mağazanıza gelen siparişleri otomatik olarak yakalar ve bilgisayarınıza bağlı termal yazıcıdan (veya test modunda dijital olarak dosya halinde) çıktı almanızı sağlar.
 
 ---
 
@@ -31,7 +31,8 @@ Bu sistemi bilgisayarınıza indirmek ve güncellemeleri almak için Git gerekli
    ```powershell
    cd trendyol
    ```
-6. Son olarak sistemi başlatmak için şu komutu yazın:
+6. **Önemli:** Sistemi başlatmadan önce klasör içindeki `.env.example` dosyasının adını `.env` olarak değiştirin ve içindeki Supabase/Webhook bilgilerini kendi projenize göre doldurun.
+7. Son olarak sistemi başlatmak için şu komutu yazın:
    ```powershell
    docker-compose up -d --build
    ```
@@ -45,24 +46,29 @@ Sistemi kurdunuz, şimdi her şeyin yolunda olup olmadığını anlamak için sa
 
 1. Açık olan terminal penceresine şu komutu yazın ve **Enter**'a basın:
    ```powershell
-   powershell.exe -ExecutionPolicy Bypass -File ./test_webhook.ps1
+   powershell.exe -ExecutionPolicy Bypass -File .\test_webhook_unique.ps1
    ```
-2. Ekranda **"OK - Tamamlandi!"** yazısını görmelisiniz.
-3. Şimdi proje klasörünüze bakın. `order_123456789_... .txt` isimli yeni bir dosya oluşmuş olmalı.
-4. Bu dosyayı açtığınızda Trendyol sipariş bilgilerini düzenli bir şekilde görebilirsiniz.
+2. Ekranda **"OK (Inserted) - Tamamlandi!"** benzeri bir yazı görmelisiniz.
+3. Şimdi proje klasörünüze bakın. `output.txt` isimli bir dosya oluşmuş olmalı.
+4. Bu dosyayı açtığınızda Trendyol sipariş bilgilerini düzenli bir şekilde görebilirsiniz. Yeni testler yaptıkça siparişler bu dosyanın sonuna eklenecektir.
 
 ---
 
 ## Sıkça Sorulan Sorular
 
 **Soru: Bilgisayarı kapatıp açınca ne yapmalıyım?**  
-Cevap: Docker Desktop'ın açık olduğundan emin olun. Sistem otomatik olarak kaldığı yerden devam edecektir. Eğer çalışmazsa yukarıdaki "Sistemi Başlatma" adımındaki komutu tekrar yazmanız yeterlidir.
+Cevap: Docker Desktop'ın açık olduğundan emin olun. Sistem otomatik olarak kaldığı yerden devam edecektir. Eğer çalışmazsa klasör içinde terminal açıp `docker-compose up -d` komutunu tekrar yazmanız yeterlidir.
 
 **Soru: Çıktıları nerede bulabilirim?**  
-Cevap: Tüm sipariş çıktıları bu klasörün içinde `.txt` dosyası olarak anlık oluşur.
+Cevap: Sistem şu an test modunda çalıştığı için tüm sipariş çıktıları proje klasörünün içindeki `output.txt` dosyasına anlık olarak alt alta eklenir.
 
 **Soru: Gerçek yazıcıya nasıl bağlarım?**  
-Cevap: Teknik destek ekibimizle iletişime geçerek `docker-compose.yml` dosyasındaki yazıcı yolunu (`/dev/usb/lp0` gibi) kendi yazıcınıza göre güncelletmeniz yeterlidir.
+Cevap: Yazılımın içinde termal yazıcı altyapısı mevcuttur. `.env` dosyasındaki `TEST_MODE=true` ayarını kaldırıp, `docker-compose.yml` dosyasındaki yazıcı yolunu (`/dev/usb/lp0` gibi) kendi yazıcınıza göre güncelleyerek gerçek yazıcıya geçiş yapabilirsiniz.
+
+**Soru: Sisteme yeni bir güncelleme gelirse nasıl yüklerim?**  
+Cevap: Bilgisayarınızdaki proje klasörünün (`trendyol`) içinde bir terminal (veya PowerShell) açın. Ardından sırasıyla şu iki komutu yazın:
+1. `git pull` (Bu komut internetteki en son yenilikleri bilgisayarınıza indirir.)
+2. `docker-compose up -d --build` (Bu komut yeni indirdiğiniz kodlarla sistemi yeniden kurup başlatır.)
 
 ---
 *Hazırlayan: Zze*
