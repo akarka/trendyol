@@ -21,17 +21,15 @@ const (
 )
 
 type PhoenixMessage struct {
-	Topic   string      `json:"topic"`
-	Event   string      `json:"event"`
-	Payload interface{} `json:"payload"`
-	Ref     string      `json:"ref"`
+	Topic   string          `json:"topic"`
+	Event   string          `json:"event"`
+	Payload json.RawMessage `json:"payload"`
+	Ref     string          `json:"ref"`
 }
 
 type PostgresChangesPayload struct {
-	Type   string                 `json:"type"`
-	Schema string                 `json:"schema"`
-	Table  string                 `json:"table"`
-	Record map[string]interface{} `json:"record"`
+	Type   string          `json:"type"`
+	Record json.RawMessage `json:"record"`
 }
 
 func StartRealtimeSubscription(cfg *config.Config, dbChannel chan<- string) {
@@ -40,7 +38,7 @@ func StartRealtimeSubscription(cfg *config.Config, dbChannel chan<- string) {
 	for {
 		err := subscribe(cfg, dbChannel)
 		if err != nil {
-			log.Printf("[REALTIME] Bağlantı hatası: %v. %v sonra yeniden denenecek.", err, delay)
+			log.Printf("[REALTIME] Bağlantı/Abonelik hatası: %v. %v sonra yeniden denenecek.", err, delay)
 			time.Sleep(delay)
 
 			delay *= 2
@@ -48,7 +46,7 @@ func StartRealtimeSubscription(cfg *config.Config, dbChannel chan<- string) {
 				delay = maxReconnectDelay
 			}
 		} else {
-			delay = reconnectDelay // Başarılı bağlantıda sıfırla
+			delay = reconnectDelay
 		}
 	}
 }
@@ -56,6 +54,7 @@ func StartRealtimeSubscription(cfg *config.Config, dbChannel chan<- string) {
 func subscribe(cfg *config.Config, dbChannel chan<- string) error {
 	host := strings.TrimPrefix(cfg.SupabaseURL, "https://")
 	wsURL := url.URL{Scheme: "wss", Host: host, Path: "/realtime/v1/websocket", RawQuery: "apikey=" + cfg.SupabaseAnonKey + "&vsn=1.0.0"}
+	
 	log.Printf("[REALTIME] Supabase'e bağlanılıyor: %s", wsURL.String())
 
 	conn, _, err := websocket.DefaultDialer.Dial(wsURL.String(), nil)
@@ -67,12 +66,11 @@ func subscribe(cfg *config.Config, dbChannel chan<- string) error {
 
 	var refCounter uint64
 
-	// Subscribe to changes
 	ref := fmt.Sprintf("%d", atomic.AddUint64(&refCounter, 1))
-	subscriptionMsg := PhoenixMessage{
-		Topic: "realtime:public:trendyol_orders",
-		Event: "phx_join",
-		Payload: map[string]interface{}{
+	subscriptionMsg := map[string]interface{}{
+		"topic": "realtime:public:trendyol_orders",
+		"event": "phx_join",
+		"payload": map[string]interface{}{
 			"config": map[string]interface{}{
 				"postgres_changes": []map[string]interface{}{
 					{
@@ -83,8 +81,9 @@ func subscribe(cfg *config.Config, dbChannel chan<- string) error {
 				},
 			},
 		},
-		Ref: ref,
+		"ref": ref,
 	}
+
 	if err := conn.WriteJSON(subscriptionMsg); err != nil {
 		return fmt.Errorf("abonelik mesajı gönderilemedi: %w", err)
 	}
@@ -104,34 +103,28 @@ func subscribe(cfg *config.Config, dbChannel chan<- string) error {
 				log.Printf("[REALTIME] JSON parse hatası (dış): %v", err)
 				continue
 			}
-			
-			// Gelen INSERT eventlerini işle
+
 			if msg.Event == "postgres_changes" {
-				payloadData, err := json.Marshal(msg.Payload)
-				if err != nil {
-					log.Printf("[REALTIME] Payload marshal hatası: %v", err)
+				var payloadData map[string]interface{}
+				if err := json.Unmarshal(msg.Payload, &payloadData); err != nil {
+					log.Printf("[REALTIME] Payload parse hatası: %v", err)
 					continue
 				}
 
-				var changes []PostgresChangesPayload
-				if err := json.Unmarshal(payloadData, &changes); err != nil {
-						// Bazen tek bir nesne olarak gelebilir
-						var singleChange PostgresChangesPayload
-						if err2 := json.Unmarshal(payloadData, &singleChange); err2 == nil {
-								changes = []PostgresChangesPayload{singleChange}
-						} else {
-								log.Printf("[REALTIME] Payload parse hatası (iç): %v", err)
-								continue
+				// The payload structure can vary, but typically it contains a 'data' object
+				// which has the actual change details.
+				if dataMap, ok := payloadData["data"].(map[string]interface{}); ok {
+					if typeVal, typeOk := dataMap["type"].(string); typeOk && typeVal == "INSERT" {
+						if record, recordOk := dataMap["record"].(map[string]interface{}); recordOk {
+							recordJSON, _ := json.Marshal(record)
+							log.Println("[REALTIME] Yeni sipariş alındı, kanala gönderiliyor.")
+							dbChannel <- string(recordJSON)
 						}
-				}
-				
-				for _, change := range changes {
-					if change.Type == "INSERT" {
-						recordJSON, err := json.Marshal(change.Record)
-						if err != nil {
-							log.Printf("[REALTIME] Record marshal hatası: %v", err)
-							continue
-						}
+					}
+				} else if typeVal, ok := payloadData["type"].(string); ok && typeVal == "INSERT" {
+					// Alternative payload structure
+					if record, recordOk := payloadData["record"].(map[string]interface{}); recordOk {
+						recordJSON, _ := json.Marshal(record)
 						log.Println("[REALTIME] Yeni sipariş alındı, kanala gönderiliyor.")
 						dbChannel <- string(recordJSON)
 					}
@@ -140,7 +133,6 @@ func subscribe(cfg *config.Config, dbChannel chan<- string) error {
 		}
 	}()
 
-	// Heartbeat
 	ticker := time.NewTicker(heartbeatInterval)
 	defer ticker.Stop()
 
@@ -150,7 +142,12 @@ func subscribe(cfg *config.Config, dbChannel chan<- string) error {
 			return nil
 		case <-ticker.C:
 			ref := fmt.Sprintf("%d", atomic.AddUint64(&refCounter, 1))
-			heartbeatMsg := PhoenixMessage{Topic: "phoenix", Event: "heartbeat", Payload: map[string]string{}, Ref: ref}
+			heartbeatMsg := map[string]interface{}{
+				"topic":   "phoenix",
+				"event":   "heartbeat",
+				"payload": map[string]string{},
+				"ref":     ref,
+			}
 			conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := conn.WriteJSON(heartbeatMsg); err != nil {
 				return fmt.Errorf("heartbeat gönderilemedi: %w", err)

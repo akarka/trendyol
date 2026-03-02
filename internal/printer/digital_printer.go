@@ -1,45 +1,44 @@
-// internal/printer/digital_printer.go
 package printer
 
 import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/akarka/trendyol/internal/parser"
 )
 
-// PrintToText generates a human-readable digital representation of the order
-func PrintToText(filePath string, order *parser.Order) error {
-	var sb strings.Builder
+// PrintToTextFile formats the order details and appends them to a specified text file.
+func PrintToTextFile(filePath string, order *parser.Order) error {
+	var builder strings.Builder
 
-	sb.WriteString("==========================================\n")
-	sb.WriteString("            TRENDYOL SIPARIS             \n")
-	sb.WriteString("==========================================\n")
-	sb.WriteString(fmt.Sprintf("Siparis No:    %s\n", order.OrderNumber))
-	sb.WriteString(fmt.Sprintf("Tarih:         %s\n", order.CreatedAt.Format("02.01.2006 15:04")))
-	sb.WriteString(fmt.Sprintf("Paket Durumu:  %s\n", order.PackageStatus))
-	sb.WriteString(fmt.Sprintf("Kargo Firmasi: %s\n", order.CargoProvider))
-	sb.WriteString("------------------------------------------\n")
-	sb.WriteString(fmt.Sprintf("%-25s | %-3s | %-7s\n", "Urun Adi", "Adet", "Fiyat"))
-	sb.WriteString("------------------------------------------\n")
+	builder.WriteString("----------------------------------------\n")
+	builder.WriteString(fmt.Sprintf("Sipariş Tarihi: %s\n", time.Now().Format("2006-01-02 15:04:05")))
+	builder.WriteString(fmt.Sprintf("Sipariş No: %s\n", order.OrderNumber))
+	builder.WriteString("----------------------------------------\n\n")
 
 	for _, line := range order.Lines {
-		name := line.ProductName
-		if len(name) > 24 {
-			name = name[:21] + "..."
-		}
-		sb.WriteString(fmt.Sprintf("%-25s | %-4d | %-7.2f\n", name, line.Quantity, line.Price))
-		sb.WriteString(fmt.Sprintf("  Barkod: %s\n", line.Barcode))
+		lineStr := fmt.Sprintf("%d x %s\n", line.Quantity, line.ProductName)
+		builder.WriteString(lineStr)
+		// Example for price, you can add more details
+		// priceStr := fmt.Sprintf("   Birim Fiyat: %.2f TL\n", line.Price)
+		// builder.WriteString(priceStr)
 	}
 
-	sb.WriteString("------------------------------------------\n")
-	sb.WriteString("TESLIMAT ADRESI:\n")
-	sb.WriteString(fmt.Sprintf("%s %s\n", order.ShipmentInfo.FirstName, order.ShipmentInfo.LastName))
-	sb.WriteString(fmt.Sprintf("%s\n", order.ShipmentInfo.Address1))
-	sb.WriteString(fmt.Sprintf("%s / %s\n", order.ShipmentInfo.District, order.ShipmentInfo.City))
-	sb.WriteString(fmt.Sprintf("Posta Kodu: %s\n", order.ShipmentInfo.PostalCode))
-	sb.WriteString("==========================================\n")
+	builder.WriteString("\n----------------------------------------\n\n")
 
-	return os.WriteFile(filePath, []byte(sb.String()), 0644)
+	// Open the file in append mode, create it if it doesn't exist
+	file, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return fmt.Errorf("metin dosyası açılamadı: %w", err)
+	}
+	defer file.Close()
+
+	if _, err := file.WriteString(builder.String()); err != nil {
+		return fmt.Errorf("metin dosyasına yazılamadı: %w", err)
+	}
+
+	fmt.Printf("[DIGITAL PRINTER] Order %s written to %s\n", order.OrderNumber, filePath)
+	return nil
 }

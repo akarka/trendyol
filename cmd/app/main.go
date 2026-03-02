@@ -28,7 +28,8 @@ func main() {
 				continue
 			}
 
-			if err := printer.Print(cfg.PrinterDevice, order); err != nil {
+			// Force writing to TXT file as per directives
+			if err := printer.PrintToTXT(order); err != nil {
 				log.Printf("[PRINT_ERROR] order=%s err=%v", order.OrderNumber, err)
 				alerter.NotifyError(order.OrderNumber)
 				continue

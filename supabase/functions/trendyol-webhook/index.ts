@@ -20,8 +20,8 @@ function isValidBasicAuth(header: string | null): boolean {
 }
 
 interface TrendyolPayload {
-  id: string
-  orderNumber: string
+  id: string | number
+  orderNumber: string | number
   packageStatus: string
   [key: string]: unknown
 }
@@ -29,11 +29,12 @@ interface TrendyolPayload {
 function validatePayload(data: unknown): data is TrendyolPayload {
   if (typeof data !== "object" || data === null) return false
   const d = data as Record<string, unknown>
-  return (
-    typeof d.id === "string" && d.id.length > 0 &&
-    typeof d.orderNumber === "string" && d.orderNumber.length > 0 &&
-    typeof d.packageStatus === "string" && d.packageStatus.length > 0
-  )
+  
+  const hasId = (typeof d.id === "string" && d.id.length > 0) || typeof d.id === "number"
+  const hasOrderNumber = (typeof d.orderNumber === "string" && d.orderNumber.length > 0) || typeof d.orderNumber === "number"
+  const hasPackageStatus = typeof d.packageStatus === "string" && d.packageStatus.length > 0
+  
+  return hasId && hasOrderNumber && hasPackageStatus
 }
 
 serve(async (req: Request) => {
@@ -64,27 +65,22 @@ serve(async (req: Request) => {
   const { error } = await supabase
     .from("trendyol_orders")
     .insert({
-      order_id: payload.id,
-      order_number: payload.orderNumber,
+      order_id: String(payload.id),
+      order_number: String(payload.orderNumber),
       package_status: payload.packageStatus,
       payload: payload,
     })
 
   if (error) {
     if (error.code === PG_UNIQUE_VIOLATION) {
-      console.info(`[DUPLICATE] order_id=${payload.id} status=${payload.packageStatus}`)
-      // For duplicates, it's okay to return 200 as it's expected behavior
+      console.info(`[DUPLICATE] order_id=${String(payload.id)} status=${payload.packageStatus}`)
       return new Response("OK (Duplicate)", { status: 200 })
     } else {
       console.error(`[DB_ERROR] code=${error.code} message=${error.message}`, payload)
-      // For debugging, return the actual error message
-      return new Response(
-        `Database Error: ${error.message}`,
-        { status: 500, headers: { "Content-Type": "text/plain" } }
-      )
+      // Return 200 to Trendyol to prevent retries, but indicate an error was logged internally.
+      return new Response("OK (Error Logged)", { status: 200 })
     }
   }
 
-  // On successful insert
   return new Response("OK (Inserted)", { status: 200 })
 })
