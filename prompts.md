@@ -1,7 +1,7 @@
 1. Proje Başlatma ve Dizin Yapısı (High-Level)
 Bu prompt, projenin iskeletini oluşturur .
 
-"Create a new Go module named github.com/yourorg/trendyol-print-relay. Generate the following directory structure: cmd/app, internal/listener, internal/parser, internal/printer, internal/alerter, and config . Create empty main.go inside cmd/app and empty .go files inside each internal package according to standard Go project layout ."
+"Create a new Go module named github.com/akarka/trendyol. Generate the following directory structure: cmd/app, internal/listener, internal/parser, internal/printer, internal/alerter, and config . Create empty main.go inside cmd/app and empty .go files inside each internal package according to standard Go project layout ."
 
 2. Veritabanı Şeması ve RLS Kurulumu (Cloud Layer)
 Bu prompt, Supabase üzerinde çalışacak SQL dosyasını hazırlatır .

@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/akarka/trendyol-print-relay/internal/parser"
-	"github.com/akarka/trendyol-print-relay/internal/printer"
+	"github.com/akarka/trendyol/internal/parser"
+	"github.com/akarka/trendyol/internal/printer"
 )
 
 const dummyJSON = `{

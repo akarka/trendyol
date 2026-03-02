@@ -255,11 +255,11 @@ import (
     "os/signal"
     "syscall"
  
-    "github.com/yourorg/trendyol-print-relay/config"
-    "github.com/yourorg/trendyol-print-relay/internal/alerter"
-    "github.com/yourorg/trendyol-print-relay/internal/listener"
-    "github.com/yourorg/trendyol-print-relay/internal/parser"
-    "github.com/yourorg/trendyol-print-relay/internal/printer"
+    "github.com/akarka/trendyol/config"
+    "github.com/akarka/trendyol/internal/alerter"
+    "github.com/akarka/trendyol/internal/listener"
+    "github.com/akarka/trendyol/internal/parser"
+    "github.com/akarka/trendyol/internal/printer"
 )
  
 func main() {
@@ -302,7 +302,7 @@ import (
     "log"
     "time"
  
-    "github.com/yourorg/trendyol-print-relay/config"
+    "github.com/akarka/trendyol/config"
     // Önerilen kütüphane: github.com/supabase-community/realtime-go
 )
  

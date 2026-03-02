@@ -1,12 +1,9 @@
-// config/config.go
 package config
 
 import (
-	"log"
 	"os"
 )
 
-// Config holds the application configuration
 type Config struct {
 	SupabaseURL     string
 	SupabaseAnonKey string
@@ -14,7 +11,6 @@ type Config struct {
 	LogLevel        string
 }
 
-// Load reads configuration from environment variables
 func Load() *Config {
 	cfg := &Config{
 		SupabaseURL:     os.Getenv("SUPABASE_URL"),
@@ -23,14 +19,8 @@ func Load() *Config {
 		LogLevel:        os.Getenv("LOG_LEVEL"),
 	}
 
-	if cfg.SupabaseURL == "" {
-		log.Fatal("SUPABASE_URL environment variable is mandatory")
-	}
-	if cfg.SupabaseAnonKey == "" {
-		log.Fatal("SUPABASE_ANON_KEY environment variable is mandatory")
-	}
-	if cfg.PrinterDevice == "" {
-		log.Fatal("PRINTER_DEVICE environment variable is mandatory")
+	if cfg.SupabaseURL == "" || cfg.SupabaseAnonKey == "" || cfg.PrinterDevice == "" {
+		panic("Zorunlu ortam değişkenleri eksik: SUPABASE_URL, SUPABASE_ANON_KEY veya PRINTER_DEVICE")
 	}
 
 	if cfg.LogLevel == "" {
