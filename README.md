@@ -42,15 +42,32 @@ Bu sistemi bilgisayarınıza indirmek ve güncellemeleri almak için Git gerekli
 
 ## Sistemin Çalıştığını Test Etme
 
-Sistemi kurdunuz, şimdi her şeyin yolunda olup olmadığını anlamak için sahte bir sipariş gönderelim:
+Sistemi kurdunuz, şimdi her şeyin yolunda olup olmadığını anlamak için sahte siparişler gönderelim:
 
 1. Açık olan terminal penceresine şu komutu yazın ve **Enter**'a basın:
    ```powershell
-   powershell.exe -ExecutionPolicy Bypass -File .\test_webhook_unique.ps1
+   powershell.exe -ExecutionPolicy Bypass -File .\test_webhook_status.ps1
    ```
-2. Ekranda **"OK (Inserted) - Tamamlandi!"** benzeri bir yazı görmelisiniz.
-3. Şimdi proje klasörünüze bakın. `output.txt` isimli bir dosya oluşmuş olmalı.
-4. Bu dosyayı açtığınızda Trendyol sipariş bilgilerini düzenli bir şekilde görebilirsiniz. Yeni testler yaptıkça siparişler bu dosyanın sonuna eklenecektir.
+2. Ekranda **"Sunucu Yaniti: OK (Inserted) - Tamamlandi!"** benzeri bir yazı görmelisiniz.
+3. Şimdi proje klasörünüze bakın. `output.txt` isimli bir dosya oluşmuş olmalı. Bu dosyayı açtığınızda Trendyol sipariş bilgilerini görebilirsiniz.
+
+**Farklı Sipariş Durumlarını Test Etmek:**
+
+Sistem sadece yeni siparişleri ("Created") değil, iptal edilen ("Cancelled"), teslim edilen ("Delivered") veya tedarik edilemeyen ("UnSupplied") siparişleri de yakalayabilir. Bunları test etmek için aynı koda `-Status` eklemeniz yeterlidir:
+
+*   **İptal edilen** sipariş testi için:
+    ```powershell
+    powershell.exe -ExecutionPolicy Bypass -File .\test_webhook_status.ps1 -Status "Cancelled"
+    ```
+*   **Teslim edilen** sipariş testi için:
+    ```powershell
+    powershell.exe -ExecutionPolicy Bypass -File .\test_webhook_status.ps1 -Status "Delivered"
+    ```
+*   **Tedarik edilemeyen** sipariş testi için:
+    ```powershell
+    powershell.exe -ExecutionPolicy Bypass -File .\test_webhook_status.ps1 -Status "UnSupplied"
+    ```
+Yeni testler yaptıkça veriler `output.txt` dosyasının sonuna eklenecektir.
 
 ---
 

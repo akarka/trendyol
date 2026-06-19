@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(go build ./...)",
+      "Bash(go test ./...)",
+      "Bash(go vet ./...)",
+      "Bash(go run ./cmd/app/...)",
+      "Bash(docker-compose *)",
+      "Bash(docker compose *)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git status*)",
+      "Bash(git add *)",
+      "Bash(git commit*)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Read(*)",
+      "Edit(*)",
+      "Write(*)",
+      "Glob(*)"
+    ]
+  }
+}

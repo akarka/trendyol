@@ -24,13 +24,13 @@ func main() {
 		for rawPayload := range dbChannel {
 			order, err := parser.ParseOrder(rawPayload)
 			if err != nil {
-				log.Printf("[PARSE_ERROR] %v | raw: %s", err, rawPayload)
+				log.Printf("[AYRIŞTIRMA_HATASI] %v | ham veri: %s", err, rawPayload)
 				continue
 			}
 
 			// Force writing to TXT file as per directives
 			if err := printer.PrintToTXT(order); err != nil {
-				log.Printf("[PRINT_ERROR] order=%s err=%v", order.OrderNumber, err)
+				log.Printf("[YAZDIRMA_HATASI] sipariş=%s hata=%v", order.OrderNumber, err)
 				alerter.NotifyError(order.OrderNumber)
 				continue
 			}

@@ -1,0 +1,5 @@
+\trendyol> powershell.exe -ExecutionPolicy Bypass -File .\test_webhook_status.ps1
+Benzersiz 'Created' statulu siparis gonderiliyor (ID: curl-test-7177-191336)...
+F:\PROGRAMCILIK\trendyol\test_webhook_status.ps1 : Ä°stek sirasinda hata olustu: The remote name could not be resolved: 'ruyxkthhvhbygwhwswri.supabase.co'
+    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
+    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,test_webhook_status.ps1

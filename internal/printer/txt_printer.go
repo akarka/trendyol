@@ -14,9 +14,23 @@ func PrintToTXT(order *parser.Order) error {
 	filePath := "output.txt"
 	var builder strings.Builder
 
+	// Sipariş durumunu Türkçeye çevir
+	statusTr := order.PackageStatus
+	switch order.PackageStatus {
+	case "Created":
+		statusTr = "Yeni Sipariş"
+	case "Cancelled":
+		statusTr = "İptal Edildi"
+	case "Delivered":
+		statusTr = "Teslim Edildi"
+	case "UnSupplied":
+		statusTr = "Tedarik Edilemedi"
+	}
+
 	builder.WriteString("========================================\n")
 	builder.WriteString(fmt.Sprintf("Tarih      : %s\n", time.Now().Format("2006-01-02 15:04:05")))
 	builder.WriteString(fmt.Sprintf("Sipariş No : %s\n", order.OrderNumber))
+	builder.WriteString(fmt.Sprintf("Durum      : %s\n", statusTr))
 	
 	customerName := "Bilinmiyor"
 	if order.ShipmentInfo.FirstName != "" || order.ShipmentInfo.LastName != "" {
@@ -38,14 +52,14 @@ func PrintToTXT(order *parser.Order) error {
 
 	file, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		return fmt.Errorf("failed to open output file: %w", err)
+		return fmt.Errorf("çıktı dosyası açılamadı: %w", err)
 	}
 	defer file.Close()
 
 	if _, err := file.WriteString(builder.String()); err != nil {
-		return fmt.Errorf("failed to write to output file: %w", err)
+		return fmt.Errorf("çıktı dosyasına yazılamadı: %w", err)
 	}
 
-	fmt.Printf("[TXT PRINTER] Order %s appended to %s\n", order.OrderNumber, filePath)
+	fmt.Printf("[TXT YAZICI] %s numaralı sipariş %s dosyasına eklendi\n", order.OrderNumber, filePath)
 	return nil
 }
