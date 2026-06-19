@@ -1,8 +1,10 @@
 # S01 — Infra + DB
 
-**Durum:** 🔲 Bekliyor
+**Durum:** ✅ Tamamlandı
 **Bağımlılık:** Yok (ilk session)
 **Sonraki:** S02-go-server-webhook.md
+
+> Not: `go get` ile eklenen chi/jwt/crypto, henüz hiçbir paket import etmediği için `go mod tidy` tarafından go.mod'dan düşürüldü. S02/S03'te ilgili kod import edince doğal olarak geri eklenecek. Şu an go.mod'da yalnızca fiilen kullanılan `sqlx` + `mysql` var.
 
 ---
 
@@ -74,11 +76,11 @@ Sadece: config yükle → DB bağlan → (S02'de server başlatılacak).
 
 ## Çıkış Kriteri
 
-- [ ] `go build ./...` hatasız geçiyor
-- [ ] `docker-compose up mysql` → container ayağa kalkıyor
-- [ ] `docs/schema.sql` çalıştırılınca 4 tablo oluşuyor
-- [ ] `internal/listener/` klasörü yok
-- [ ] `gorilla/websocket` `go.mod`'da yok
+- [x] `go build ./...` hatasız geçiyor (docker build doğrulandı)
+- [x] `docker-compose up mysql` → container ayağa kalkıyor
+- [x] `docs/schema.sql` çalıştırılınca 4 tablo oluşuyor (trendyol_orders, users, print_jobs, settings)
+- [x] `internal/listener/` klasörü yok
+- [x] `gorilla/websocket` `go.mod`'da yok
 
 ---
 

@@ -1,6 +1,6 @@
 # S02 — Go HTTP Server + Webhook
 
-**Durum:** 🔲 Bekliyor
+**Durum:** ✅ Tamamlandı
 **Bağımlılık:** S01 tamamlanmış olmalı
 **Sonraki:** S03-rest-api-auth.md
 
@@ -66,12 +66,12 @@ srv.Start(":8080")
 
 ## Çıkış Kriteri
 
-- [ ] `POST /webhook/trendyol` Basic Auth korumalı
-- [ ] Webhook alınınca `trendyol_orders` + `print_jobs` kayıtları oluşuyor
-- [ ] `output.txt`'e baskı yapılıyor (TEST_MODE=true)
-- [ ] Duplicate webhook → 200, DB'de tekrar kayıt yok
-- [ ] `test_webhook_status.ps1` çalıştırınca uçtan uca flow tamamlanıyor
-- [ ] `go build ./...` hatasız
+- [x] `POST /webhook/trendyol` Basic Auth korumalı
+- [x] Webhook alınınca `trendyol_orders` + `print_jobs` kayıtları oluşuyor
+- [x] `output.txt`'e baskı yapılıyor (TEST_MODE=true)
+- [x] Duplicate webhook → 200, DB'de tekrar kayıt yok
+- [x] `test_webhook_status.ps1` çalıştırınca uçtan uca flow tamamlanıyor
+- [x] `go build ./...` hatasız
 
 ---
 

@@ -76,7 +76,7 @@ $headers = @{
     "Authorization" = "Basic $encodedAuth"
 }
 
-$uri = "https://ruyxkthhvhbygwhwswri.supabase.co/functions/v1/trendyol-webhook"
+$uri = "http://localhost:8080/webhook/trendyol"
 
 Write-Host "Benzersiz '$Status' statulu siparis gonderiliyor (ID: $uniqueId)..." -ForegroundColor Cyan
 try {

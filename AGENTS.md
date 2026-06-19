@@ -28,15 +28,14 @@ docs/sessions/S0X-*.md         # session handoff'ları
 
 cmd/app/main.go                # entry point
 config/config.go               # env var yükleme
-internal/server/               # HTTP router + handler'lar [HENÜZ YOK]
-internal/db/                   # MySQL bağlantısı [HENÜZ YOK]
-internal/auth/                 # JWT [HENÜZ YOK]
+internal/server/               # chi router + webhook/middleware [AKTİF]
+internal/db/                   # MySQL bağlantısı + query'ler [AKTİF]
+internal/auth/                 # JWT [HENÜZ YOK — S03]
 internal/printer/txt_printer.go        # AKTİF
 internal/printer/escpos_printer.go     # STUB
 internal/printer/digital_printer.go   # UNUSED
 internal/parser/payload_parser.go      # DBRow → Order
 internal/alerter/system_alerter.go     # log sarmalayıcı
-internal/listener/supabase_client.go   # SİLİNECEK (Supabase WebSocket)
 web/                           # React + Tailwind [HENÜZ YOK]
 ```
 
@@ -58,8 +57,8 @@ web/                           # React + Tailwind [HENÜZ YOK]
 
 | # | Session | Durum |
 |---|---------|-------|
-| S01 | Infra + DB | 🔲 Bekliyor |
-| S02 | Go HTTP Server + Webhook | 🔲 Bekliyor |
+| S01 | Infra + DB | ✅ Tamamlandı |
+| S02 | Go HTTP Server + Webhook | ✅ Tamamlandı |
 | S03 | REST API + JWT Auth | 🔲 Bekliyor |
 | S04 | React Setup + Auth UI | 🔲 Bekliyor |
 | S05 | React Pages | 🔲 Bekliyor |

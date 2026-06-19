@@ -1,16 +1,19 @@
 # docker-compose.yml
-version: "3.9"
 
 services:
   print-relay:
     build: .
     restart: unless-stopped
+    depends_on:
+      - mysql
     # devices:
       # - "/dev/usb/lp0:/dev/usb/lp0"
     env_file:
       - .env
     environment:
       LOG_LEVEL: "info"
+    ports:
+      - "8080:8080"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./output.txt:/app/output.txt
@@ -19,3 +22,20 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+  mysql:
+    image: mysql:8
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: trendyol
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docs/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+volumes:
+  mysql_data:

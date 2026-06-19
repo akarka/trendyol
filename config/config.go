@@ -5,8 +5,10 @@ import (
 )
 
 type Config struct {
-	SupabaseURL     string
-	SupabaseAnonKey string
+	MySQLDSN        string
+	JWTSecret       string
+	WebhookUsername string
+	WebhookPassword string
 	PrinterDevice   string
 	LogLevel        string
 	TestMode        bool
@@ -14,25 +16,29 @@ type Config struct {
 
 func Load() *Config {
 	cfg := &Config{
-		SupabaseURL:     os.Getenv("SUPABASE_URL"),
-		SupabaseAnonKey: os.Getenv("SUPABASE_ANON_KEY"),
+		MySQLDSN:        os.Getenv("MYSQL_DSN"),
+		JWTSecret:       os.Getenv("JWT_SECRET"),
+		WebhookUsername: os.Getenv("WEBHOOK_USERNAME"),
+		WebhookPassword: os.Getenv("WEBHOOK_PASSWORD"),
 		PrinterDevice:   os.Getenv("PRINTER_DEVICE"),
 		LogLevel:        os.Getenv("LOG_LEVEL"),
 		TestMode:        os.Getenv("TEST_MODE") == "true",
 	}
 
-	// In TestMode, PrinterDevice is not mandatory as it's a file path.
-	if cfg.SupabaseURL == "" || cfg.SupabaseAnonKey == "" {
-		panic("Zorunlu ortam değişkenleri eksik: SUPABASE_URL, SUPABASE_ANON_KEY")
+	if cfg.MySQLDSN == "" || cfg.JWTSecret == "" {
+		panic("Zorunlu ortam değişkenleri eksik: MYSQL_DSN, JWT_SECRET")
+	}
+
+	if cfg.WebhookUsername == "" || cfg.WebhookPassword == "" {
+		panic("Zorunlu ortam değişkenleri eksik: WEBHOOK_USERNAME, WEBHOOK_PASSWORD")
 	}
 
 	if !cfg.TestMode && cfg.PrinterDevice == "" {
 		panic("TEST_MODE aktif değilken PRINTER_DEVICE zorunludur.")
 	}
-	
+
 	if cfg.TestMode && cfg.PrinterDevice == "" {
-		// Default file path for test mode if not provided
-		cfg.PrinterDevice = "orders.txt"
+		cfg.PrinterDevice = "output.txt"
 	}
 
 	if cfg.LogLevel == "" {
