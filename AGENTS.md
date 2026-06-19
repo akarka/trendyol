@@ -1,113 +1,75 @@
-# AGENTS.md — Agentic Handoff Dökümanı
+# AGENTS.md — Agentic Handoff
 
-Bu dosya bu codebase'i devralan AI agent'lar içindir.
+Bu dosya codebase'i devralan AI agent'lar içindir.
 
 ---
 
 ## Proje Kimliği
 
-**Rol:** Dükkan yönetim sisteminin termal yazıcı modülü. Bağımsız Go daemon; dış sisteme printer interface olarak sunulacak.
-**Repo:** `github.com/akarka/trendyol`
-**Dil/Runtime:** Go 1.22, Docker (Alpine), Supabase (Deno Edge Fn + PostgreSQL Realtime)
+**Rol:** Dükkan yönetim sisteminin termal yazıcı modülü + admin web arayüzü.
+**Repo:** `github.com/akarka/trendyol` — Go 1.22, React 18, MySQL 8, Docker
+**Mimari özeti:** Trendyol → Cloudflare Tunnel → Go HTTP Server → MySQL + Printer
 
 ---
 
-## Mimari — Tek Cümle
+## Aktif Session
 
-```
-Trendyol POST → Supabase Edge Fn (auth + idempotency) → trendyol_orders(JSONB)
-→ Realtime WebSocket → Go listener → parser → printer (ESC/POS veya txt)
-```
+`docs/sessions/` klasörünü oku. `status: active` olan session'ı bul ve oradan devam et.
 
 ---
 
-## Dosya Haritası (önem sırasıyla)
+## Dosya Haritası
 
 ```
-cmd/app/main.go                          # entry point; pipeline kurulumu
-config/config.go                         # env var yükleme
-internal/listener/supabase_client.go     # WebSocket/Phoenix; exponential backoff reconnect
-internal/parser/payload_parser.go        # DBRow → Order struct; nested JSONB unwrap
-internal/printer/txt_printer.go          # AKTİF — output.txt'e append
-internal/printer/escpos_printer.go       # STUB — ESC/POS impl yok
-internal/printer/digital_printer.go      # UNUSED — main'de çağrılmıyor
-internal/alerter/system_alerter.go       # log sarmalayıcı; OS notify TODO
-supabase/functions/trendyol-webhook/index.ts  # Deno Edge Fn; Basic Auth + DB insert
-supabase/migrations/20260301_init.sql    # tablo şeması, RLS, indeksler
-supabase/migrations/20260302_enable_realtime.sql  # realtime publication
-.env.example                             # tüm config anahtarları burada
-docker-compose.yml                       # volume: ./output.txt, devices: yorum satırında
+CLAUDE.md                      # mimari + davranış kuralları
+AGENTS.md                      # bu dosya
+docs/PLAN.md                   # tüm implementasyon planı + ilerleme tablosu
+docs/sessions/S0X-*.md         # session handoff'ları
+
+cmd/app/main.go                # entry point
+config/config.go               # env var yükleme
+internal/server/               # HTTP router + handler'lar [HENÜZ YOK]
+internal/db/                   # MySQL bağlantısı [HENÜZ YOK]
+internal/auth/                 # JWT [HENÜZ YOK]
+internal/printer/txt_printer.go        # AKTİF
+internal/printer/escpos_printer.go     # STUB
+internal/printer/digital_printer.go   # UNUSED
+internal/parser/payload_parser.go      # DBRow → Order
+internal/alerter/system_alerter.go     # log sarmalayıcı
+internal/listener/supabase_client.go   # SİLİNECEK (Supabase WebSocket)
+web/                           # React + Tailwind [HENÜZ YOK]
 ```
-
----
-
-## Veri Akışı Detayı
-
-**Webhook → DB:**
-- Edge Fn: Basic Auth (`WEBHOOK_USERNAME`/`WEBHOOK_PASSWORD`)
-- `trendyol_orders` INSERT; `UNIQUE(order_id, package_status)` idempotency
-- Trendyol'a her zaman 200 dön (retry önleme); hata internal log'a
-
-**DB → Printer:**
-- `DBRow.payload` (JSONB) → `Order` struct (nested unwrap, `payload_parser.go:43`)
-- `PackageStatus` değerleri: `Created`, `Cancelled`, `Delivered`, `UnSupplied`
-- `main.go` sadece `PrintToTXT` çağırıyor (`txt_printer.go:13`)
-
-**WebSocket:**
-- Phoenix protocol, `realtime:public:trendyol_orders` topic, `INSERT` event
-- `gorilla/websocket` — `supabase-community/realtime-go` kullanılmıyor (Alpine'de derleme sorunu)
-- Heartbeat 30s, reconnect: 5s → exp backoff → 60s max
-
----
-
-## Tamamlanan / Bekleyen
-
-| Durum | Konu |
-|-------|------|
-| ✅ | Supabase Edge Fn (auth, idempotency, DB insert) |
-| ✅ | Realtime WebSocket listener + reconnect |
-| ✅ | Order parser (DBRow → Order) |
-| ✅ | TXT printer (output.txt, TEST_MODE) |
-| ✅ | Docker deployment (multi-stage, Alpine) |
-| ✅ | Test scripts (test_webhook_status.ps1) |
-| 🔲 | ESC/POS printer impl (`escpos_printer.go` stub) |
-| 🔲 | OS notification/ses (`system_alerter.go` stub) |
-| 🔲 | Gerçek yazıcı Docker device mount (docker-compose.yml'de yorum satırında) |
-| 🔲 | `digital_printer.go` → ya sil ya da aktif et |
 
 ---
 
 ## Kritik Kısıtlar
 
-1. `SUPABASE_URL` ve `SUPABASE_ANON_KEY` olmadan servis panikler (`config.go:26`)
-2. `TEST_MODE=false` iken `PRINTER_DEVICE` zorunlu (`config.go:29`)
-3. Phoenix mesaj yapısı iki farklı payload formatını handle ediyor (`supabase_client.go:116-130`) — değiştirme
-4. ESC/POS için library seçilmedi; `escpos_printer.go` düz skeleton
-5. `output.txt` Docker volume ile host'a bağlı — container restart'ta kaybolmaz
-6. RLS: anon key sadece SELECT; Edge Fn service_role key ile INSERT
+1. `internal/listener/` Supabase'e bağlı — yeni mimaride silinecek, doğrudan HTTP webhook alıyor
+2. `internal/parser/payload_parser.go` değişmiyor — Trendyol payload yapısı aynı
+3. `internal/printer/` değişmiyor — printer abstraction aynı
+4. Phoenix/WebSocket protokolü tamamen kalkıyor
+5. JWT `role` claim zorunlu — middleware her zaman kontrol eder, şimdilik sadece `admin` geçer
+6. Trendyol'a her zaman HTTP 200 dön (retry bastırma) — webhook handler değiştirme
+7. React `dist/` → Go binary'ye `embed.FS` ile gömülü — ayrı statik sunucu yok
 
 ---
 
-## Görev Başlangıç Noktaları
+## Tamamlanan / Bekleyen
 
-**ESC/POS implement et:**
-→ `internal/printer/escpos_printer.go` → library ekle → `main.go`'daki `PrintToTXT`'i `Print` ile değiştir → `docker-compose.yml`'de `devices:` bloğunu aç
-
-**OS bildirim ekle:**
-→ `internal/alerter/system_alerter.go` → `NotifySuccess`/`NotifyError` fonksiyonlarını doldur
-
-**Yeni sipariş alanı ekle:**
-→ `internal/parser/payload_parser.go`'daki `Order` struct'a alan ekle → printer'da kullan
-
-**Yeni printer tipi ekle:**
-→ `internal/printer/` altına yeni dosya → `main.go`'da switch et
+| # | Session | Durum |
+|---|---------|-------|
+| S01 | Infra + DB | 🔲 Bekliyor |
+| S02 | Go HTTP Server + Webhook | 🔲 Bekliyor |
+| S03 | REST API + JWT Auth | 🔲 Bekliyor |
+| S04 | React Setup + Auth UI | 🔲 Bekliyor |
+| S05 | React Pages | 🔲 Bekliyor |
+| S06 | Cloudflare Tunnel + Docker Compose | 🔲 Bekliyor |
 
 ---
 
-## Test Komutu
+## Görev Başlangıç Protokolü
 
-```powershell
-powershell.exe -ExecutionPolicy Bypass -File .\test_webhook_status.ps1 [-Status "Created"|"Cancelled"|"Delivered"|"UnSupplied"]
-```
-
-Çıktı: `output.txt` — `tail -f output.txt` ile izle.
+1. `docs/PLAN.md` → ilerleme tablosunu oku
+2. `docs/sessions/` → aktif session dosyasını oku
+3. Session dosyasındaki **Giriş Noktası** ve **Bu Session Yapılacaklar** bölümünden başla
+4. Session bitince: session dosyasındaki **Durum** → `✅ Tamamlandı` yap, `docs/PLAN.md` tablosunu güncelle
