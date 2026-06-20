@@ -1,6 +1,6 @@
 # S03 — REST API + JWT Auth
 
-**Durum:** 🔲 Bekliyor
+**Durum:** ✅ Tamamlandı
 **Bağımlılık:** S02 tamamlanmış olmalı
 **Sonraki:** S04-react-setup.md
 
@@ -92,14 +92,14 @@ VALUES ('admin', '$2a$10$PLACEHOLDER', 'admin');
 
 ## Çıkış Kriteri
 
-- [ ] `POST /api/auth/login` geçerli credential ile JWT dönüyor
-- [ ] JWT olmadan `/api/*` → 401
-- [ ] `GET /api/orders` sipariş listesi dönüyor
-- [ ] `POST /api/orders/:id/print` baskıyı tetikliyor
-- [ ] `GET /api/printer/status` son job'ları dönüyor
-- [ ] `GET/PUT /api/settings` çalışıyor
-- [ ] `go run ./cmd/seed` admin kullanıcısı oluşturuyor
-- [ ] `go build ./...` hatasız
+- [x] `POST /api/auth/login` geçerli credential ile JWT dönüyor
+- [x] JWT olmadan `/api/*` → 401
+- [x] `GET /api/orders` sipariş listesi dönüyor
+- [x] `POST /api/orders/:id/print` baskıyı tetikliyor
+- [x] `GET /api/printer/status` son job'ları dönüyor
+- [x] `GET/PUT /api/settings` çalışıyor
+- [x] `go run ./cmd/seed` admin kullanıcısı oluşturuyor
+- [x] `go build ./...` hatasız (golang:1.22-alpine container'da doğrulandı)
 
 ---
 

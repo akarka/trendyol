@@ -31,3 +31,7 @@ CREATE TABLE IF NOT EXISTS settings (
   value      TEXT         NOT NULL,
   updated_at DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+-- İlk admin; gerçek şifre için: go run ./cmd/seed --username admin --password <pass>
+INSERT IGNORE INTO users (username, password_hash, role)
+VALUES ('admin', '$2a$10$PLACEHOLDER', 'admin');

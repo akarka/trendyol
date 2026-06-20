@@ -10,6 +10,7 @@ import (
 	"github.com/akarka/trendyol/internal/db"
 	"github.com/akarka/trendyol/internal/printer"
 	"github.com/akarka/trendyol/internal/server"
+	"github.com/akarka/trendyol/web"
 )
 
 func main() {
@@ -34,7 +35,7 @@ func main() {
 	printCh := make(chan server.PrintTask, 64)
 	go runPrinter(printCh, database, cfg)
 
-	srv := server.New(cfg, database, printCh)
+	srv := server.New(cfg, database, printCh, web.Dist())
 	if err := srv.Start(":8080"); err != nil {
 		log.Fatalf("[SUNUCU_HATASI] %v", err)
 	}

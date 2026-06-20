@@ -1,16 +1,22 @@
 # Dockerfile
+FROM node:20-alpine AS web-builder
+WORKDIR /web
+COPY web/package*.json ./
+RUN npm ci
+COPY web/ .
+RUN npm run build
+
 FROM golang:1.22-alpine AS builder
 
 WORKDIR /app
 
 COPY go.mod go.sum ./
-COPY . .
-
-# Ensure dependencies are tidy and downloaded correctly
-RUN go mod tidy
 RUN go mod download
 
-# Build the application
+COPY . .
+# embed için React build çıktısı (web/.gitignore'da; bu yüzden builder stage'den kopyalanır)
+COPY --from=web-builder /web/dist ./web/dist
+
 RUN CGO_ENABLED=0 GOOS=linux go build -o /app/print-relay ./cmd/app
 
 FROM alpine:latest

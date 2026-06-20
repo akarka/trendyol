@@ -1,14 +1,18 @@
 package server
 
 import (
+	"io/fs"
 	"log"
 	"net/http"
+	"path"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jmoiron/sqlx"
 
 	"github.com/akarka/trendyol/config"
+	"github.com/akarka/trendyol/internal/auth"
 	"github.com/akarka/trendyol/internal/parser"
 )
 
@@ -25,7 +29,7 @@ type Server struct {
 	router  *chi.Mux
 }
 
-func New(cfg *config.Config, db *sqlx.DB, printCh chan<- PrintTask) *Server {
+func New(cfg *config.Config, db *sqlx.DB, printCh chan<- PrintTask, static fs.FS) *Server {
 	s := &Server{cfg: cfg, db: db, printCh: printCh}
 
 	r := chi.NewRouter()
@@ -37,8 +41,46 @@ func New(cfg *config.Config, db *sqlx.DB, printCh chan<- PrintTask) *Server {
 		r.Post("/webhook/trendyol", s.handleWebhook)
 	})
 
+	r.Post("/api/auth/login", s.handleLogin)
+
+	r.Group(func(r chi.Router) {
+		r.Use(auth.JWTMiddleware(cfg.JWTSecret))
+		r.Get("/api/orders", s.handleListOrders)
+		r.Get("/api/orders/{orderID}", s.handleGetOrder)
+		r.Post("/api/orders/{orderID}/print", s.handleReprint)
+		r.Get("/api/printer/status", s.handlePrinterStatus)
+		r.Get("/api/logs", s.handleLogs)
+		r.Get("/api/settings", s.handleGetSettings)
+		r.Put("/api/settings/{key}", s.handlePutSetting)
+	})
+
+	r.Handle("/*", spaHandler(static))
+
 	s.router = r
 	return s
+}
+
+// spaHandler, embed edilmiş statik dosyaları sunar; bilinmeyen rotalarda
+// React Router'ın devralması için index.html'e düşer.
+func spaHandler(static fs.FS) http.HandlerFunc {
+	fileServer := http.FileServer(http.FS(static))
+	return func(w http.ResponseWriter, r *http.Request) {
+		p := strings.TrimPrefix(path.Clean(r.URL.Path), "/")
+		if p == "" {
+			p = "index.html"
+		}
+		if _, err := fs.Stat(static, p); err != nil {
+			b, rerr := fs.ReadFile(static, "index.html")
+			if rerr != nil {
+				http.NotFound(w, r)
+				return
+			}
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			_, _ = w.Write(b)
+			return
+		}
+		fileServer.ServeHTTP(w, r)
+	}
 }
 
 func (s *Server) Start(addr string) error {

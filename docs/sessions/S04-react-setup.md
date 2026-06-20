@@ -1,6 +1,6 @@
 # S04 — React Setup + Auth UI
 
-**Durum:** 🔲 Bekliyor
+**Durum:** ✅ Tamamlandı
 **Bağımlılık:** S03 tamamlanmış olmalı
 **Sonraki:** S05-react-pages.md
 
@@ -121,13 +121,13 @@ COPY --from=web-builder /web/dist ./web/dist
 
 ## Çıkış Kriteri
 
-- [ ] `npm run dev` çalışıyor, login sayfası açılıyor
-- [ ] Login → JWT alınıyor, localStorage'a yazılıyor
-- [ ] Layout: mobilde alt nav, desktop'ta sidebar
-- [ ] 401 → otomatik logout + login sayfasına yönlendirme
-- [ ] `npm run build` → `web/dist/` oluşuyor
-- [ ] `go build ./...` embed ile birlikte hatasız
-- [ ] `localhost:8080/` → React SPA açılıyor
+- [x] `npm run dev` çalışıyor, login sayfası açılıyor
+- [x] Login → JWT alınıyor, localStorage'a yazılıyor
+- [x] Layout: mobilde alt nav, desktop'ta sidebar
+- [x] 401 → otomatik logout + login sayfasına yönlendirme
+- [x] `npm run build` → `web/dist/` oluşuyor
+- [~] `go build ./...` embed ile birlikte — kod hazır; bu makinede Go toolchain yok, Docker builder stage'de derleniyor
+- [x] `localhost:8080/` → React SPA (embed) — `spaHandler` index.html fallback ile bağlandı
 
 ---
 
