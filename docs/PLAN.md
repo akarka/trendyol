@@ -30,6 +30,31 @@ S01 → S02 → S03 → S04 → S05 → S06
 
 Her session bir öncekinin çıktısına bağlı.
 
+## Uygulanan Durum (S01–S05)
+
+Aşağıdaki kısımlar fiilen kodlandı; bu bölüm planı değil mevcut gerçeği yansıtır.
+
+**Backend (Go)**
+- `config/config.go` — MySQL DSN + JWT + webhook + printer env'leri (Supabase kaldırıldı)
+- `internal/db/` — `db.go` (sqlx bağlantı), `queries.go` (orders/print_jobs/settings/users + `InsertOrder` idempotent `INSERT IGNORE`)
+- `internal/server/` — chi router; `webhook.go` (BasicAuth, daima 200), `auth.go` (bcrypt login → JWT), `api.go` (orders/reprint/printer-status/logs/settings), `middleware.go`
+- `internal/auth/` — `jwt.go` (HS256, 24s), `middleware.go` (Bearer zorunlu)
+- `cmd/seed/main.go` — `--username/--password` ile bcrypt admin kullanıcı
+- `internal/listener/` (Supabase) kaldırıldı; parser/printer paketlerine dokunulmadı
+
+**Frontend (React) + embed**
+- `web/` — Vite + React 18 + TS + Tailwind v3; `src/api` (axios, Bearer + 401 auto-logout), `AuthContext`, `ToastContext`, router + `ProtectedRoute`, `Layout` (desktop sidebar / mobil alt nav)
+- Sayfalar: `LoginPage`, `OrdersPage` (filtre + tablo/kart + sayfalama + baskı), `OrderDetailModal`, `PrinterPage` (10s refetch), `SettingsPage`
+- `web/embed.go` `//go:embed all:dist` + `internal/server/server.go` `spaHandler` (bilinmeyen rota → index.html); `cmd/app/main.go` `web.Dist()` geçiyor
+- `Dockerfile` — `node:20` web-builder multi-stage → `web/dist` Go builder'a kopyalanır
+
+**Plandan sapmalar / notlar**
+- Toast, `components/Toast.tsx` yerine `context/ToastContext.tsx` (provider + `useToast`)
+- `web/dist` ve `node_modules` git'e dahil değil (`web/.gitignore`); embed çıktısı Docker build sırasında üretilir
+- Go toolchain geliştirme makinesinde yok; `go build` doğrulaması Docker `golang:1.22-alpine` builder stage'inde yapılıyor
+
+**Kalan:** S06 (Cloudflare Tunnel + docker-compose full stack + e2e)
+
 ## Hedef DB Şeması
 
 ```sql

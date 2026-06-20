@@ -26,18 +26,29 @@ AGENTS.md                      # bu dosya
 docs/PLAN.md                   # tüm implementasyon planı + ilerleme tablosu
 docs/sessions/S0X-*.md         # session handoff'ları
 
-cmd/app/main.go                # entry point
-config/config.go               # env var yükleme
-internal/server/               # chi router + webhook/middleware [AKTİF]
-internal/db/                   # MySQL bağlantısı + query'ler [AKTİF]
-internal/auth/                 # JWT [HENÜZ YOK — S03]
-internal/printer/txt_printer.go        # AKTİF
-internal/printer/escpos_printer.go     # STUB
-internal/printer/digital_printer.go   # UNUSED
-internal/parser/payload_parser.go      # DBRow → Order
+cmd/app/main.go                # entry point: config→DB(retry)→printer goroutine→server
+cmd/seed/main.go               # bcrypt admin kullanıcı: --username --password [--role]
+config/config.go               # env var yükleme (MySQL+JWT+webhook+printer)
+internal/server/server.go      # chi router, route'lar, spaHandler (SPA embed)
+internal/server/webhook.go     # POST /webhook/trendyol (BasicAuth, daima 200)
+internal/server/auth.go        # POST /api/auth/login (bcrypt → JWT)
+internal/server/api.go         # /api/orders, reprint, printer/status, logs, settings
+internal/server/middleware.go  # webhook BasicAuth
+internal/db/db.go              # sqlx bağlantı
+internal/db/queries.go         # orders/print_jobs/settings/users query'leri
+internal/auth/jwt.go           # HS256 token üret/doğrula (24s)
+internal/auth/middleware.go    # /api/* için Bearer JWT zorunlu
+internal/printer/txt_printer.go        # AKTİF (TEST_MODE)
+internal/printer/escpos_printer.go     # ESC/POS
+internal/printer/digital_printer.go    # UNUSED
+internal/parser/payload_parser.go      # DBRow → Order (dokunulmadı)
 internal/alerter/system_alerter.go     # log sarmalayıcı
-web/                           # React + Tailwind [HENÜZ YOK]
+web/embed.go                   # //go:embed all:dist → web.Dist()
+web/src/                       # React 18 + TS + Tailwind v3 (api/context/router/components/pages)
+web/dist/                      # build çıktısı (git'te yok; Docker build üretir)
 ```
+
+> `internal/listener/` (Supabase WebSocket) silindi; Phoenix protokolü tamamen kaldırıldı.
 
 ---
 

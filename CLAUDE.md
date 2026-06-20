@@ -62,14 +62,17 @@ settings        (key PK, value, updated_at)
 | Tunnel | Cloudflare Tunnel (cloudflared Docker) |
 | Deploy | Docker Compose |
 
-## Mevcut Durum (geçiş sürecinde)
+## Mevcut Durum
 
-- `internal/listener/` → SİLİNECEK (Supabase WebSocket)
-- `internal/server/` → OLUŞTURULACAK
-- `internal/db/` → OLUŞTURULACAK
-- `internal/auth/` → OLUŞTURULACAK
-- `web/` → OLUŞTURULACAK
-- `config/config.go` → SUPABASE değişkenleri kalkacak, MySQL + JWT eklenecek
+S01–S05 tamamlandı. Kalan: **S06** (Cloudflare Tunnel + docker-compose full stack + e2e).
+
+- `internal/listener/` → SİLİNDİ (Supabase WebSocket / Phoenix kaldırıldı)
+- `internal/server/` → ✅ chi router, webhook, auth, api, spaHandler (SPA embed)
+- `internal/db/` → ✅ sqlx bağlantı + query'ler
+- `internal/auth/` → ✅ JWT (HS256, 24s) + middleware
+- `cmd/seed/` → ✅ bcrypt admin kullanıcı seed
+- `web/` → ✅ React 18 + Vite + Tailwind v3 SPA; `web/dist` Go binary'ye embed
+- `config/config.go` → ✅ Supabase kaldırıldı, MySQL + JWT + webhook + printer env'leri
 
 ## Roller
 
