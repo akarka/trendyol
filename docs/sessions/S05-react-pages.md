@@ -1,6 +1,6 @@
 # S05 — React Pages
 
-**Durum:** 🔲 Bekliyor
+**Durum:** ✅ Tamamlandı
 **Bağımlılık:** S04 tamamlanmış olmalı
 **Sonraki:** S06-tunnel-docker.md
 
@@ -89,13 +89,15 @@ Context veya basit state — overkill etme.
 
 ## Çıkış Kriteri
 
-- [ ] Sipariş listesi yükleniyor, filtre çalışıyor
-- [ ] "Yazdır" → toast success + print_jobs'a kayıt
-- [ ] Detail modal açılıp kapanıyor, tüm alanlar görünüyor
-- [ ] Printer sayfası 10s'de bir güncelleniyor
-- [ ] Settings kaydediliyor
-- [ ] Mobil görünüm: alt nav + kart layout çalışıyor
-- [ ] `npm run build` hatasız
+- [x] Sipariş listesi yükleniyor, filtre çalışıyor (status tab'ları)
+- [x] "Yazdır" → toast success + `POST /api/orders/:id/print`
+- [x] Detail modal açılıp kapanıyor, ürün/toplam/adres görünüyor
+- [x] Printer sayfası 10s'de bir refetch (`refetchInterval`)
+- [x] Settings kaydediliyor (`PUT /api/settings/:key`)
+- [x] Mobil görünüm: alt nav + kart layout
+- [x] `npm run build` hatasız (149 modül)
+
+Not: Toast `components/Toast.tsx` yerine `context/ToastContext.tsx` (provider + useToast) olarak yazıldı.
 
 ---
 

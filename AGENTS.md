@@ -61,7 +61,7 @@ web/                           # React + Tailwind [HENÜZ YOK]
 | S02 | Go HTTP Server + Webhook | ✅ Tamamlandı |
 | S03 | REST API + JWT Auth | ✅ Tamamlandı |
 | S04 | React Setup + Auth UI | ✅ Tamamlandı |
-| S05 | React Pages | 🔲 Bekliyor |
+| S05 | React Pages | ✅ Tamamlandı |
 | S06 | Cloudflare Tunnel + Docker Compose | 🔲 Bekliyor |
 
 ---

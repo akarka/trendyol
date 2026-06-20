@@ -16,7 +16,7 @@ Trendyol → Cloudflare Tunnel → Go HTTP Server → MySQL 8 → Printer
 | S02 | [Go HTTP Server + Webhook](sessions/S02-go-server-webhook.md) | chi router, webhook endpoint, DB write, print goroutine | ✅ |
 | S03 | [REST API + JWT Auth](sessions/S03-rest-api-auth.md) | login, orders, print-jobs, settings, printer-status endpoint'leri | ✅ |
 | S04 | [React Setup + Auth UI](sessions/S04-react-setup.md) | Vite + React + Tailwind, login sayfası, API client, embed | ✅ |
-| S05 | [React Pages](sessions/S05-react-pages.md) | Order list, order detail, printer status/log, settings | 🔲 |
+| S05 | [React Pages](sessions/S05-react-pages.md) | Order list, order detail, printer status/log, settings | ✅ |
 | S06 | [Cloudflare + Docker](sessions/S06-tunnel-docker.md) | cloudflared, docker-compose full stack, e2e test | 🔲 |
 
 ## Durum Kodları
