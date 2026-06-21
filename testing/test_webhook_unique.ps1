@@ -56,7 +56,7 @@ $headers = @{
 }
 
 # Hedef webhook endpoint'i. Yerel test için varsayılan; canlı için Cloudflare Tunnel URL'ini ver:
-#   $env:WEBHOOK_URL="https://<tunnel>/webhook/trendyol"; .\test_webhook_unique.ps1
+#   $env:WEBHOOK_URL="https://<tunnel>/webhook/trendyol"; .\testing\test_webhook_unique.ps1
 $uri = if ($env:WEBHOOK_URL) { $env:WEBHOOK_URL } else { "http://localhost:8080/webhook/trendyol" }
 
 Write-Host "Benzersiz siparis gonderiliyor (ID: $uniqueId)..." -ForegroundColor Cyan

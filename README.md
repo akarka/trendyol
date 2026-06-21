@@ -72,7 +72,7 @@ Trendyol'un webhook gönderebilmesi ve arayüze internetten erişmek için:
 
 Sahte sipariş gönderin (lokal):
 ```powershell
-powershell.exe -ExecutionPolicy Bypass -File .\test_webhook_status.ps1
+powershell.exe -ExecutionPolicy Bypass -File .\testing\test_webhook_status.ps1
 ```
 - Ekranda **"Sunucu Yaniti: OK"** benzeri yazı görmelisiniz.
 - `output.txt` dosyası oluşur ve sipariş bilgisi içine yazılır.
@@ -80,9 +80,9 @@ powershell.exe -ExecutionPolicy Bypass -File .\test_webhook_status.ps1
 
 Farklı durumlar için `-Status` ekleyin:
 ```powershell
-.\test_webhook_status.ps1 -Status "Cancelled"   # iptal
-.\test_webhook_status.ps1 -Status "Delivered"   # teslim
-.\test_webhook_status.ps1 -Status "UnSupplied"  # tedarik edilemeyen
+.\testing\test_webhook_status.ps1 -Status "Cancelled"   # iptal
+.\testing\test_webhook_status.ps1 -Status "Delivered"   # teslim
+.\testing\test_webhook_status.ps1 -Status "UnSupplied"  # tedarik edilemeyen
 ```
 
 ---
