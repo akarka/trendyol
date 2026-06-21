@@ -55,7 +55,9 @@ $headers = @{
     "Authorization" = "Basic $encodedAuth"
 }
 
-$uri = "https://ruyxkthhvhbygwhwswri.supabase.co/functions/v1/trendyol-webhook"
+# Hedef webhook endpoint'i. Yerel test için varsayılan; canlı için Cloudflare Tunnel URL'ini ver:
+#   $env:WEBHOOK_URL="https://<tunnel>/webhook/trendyol"; .\test_webhook_unique.ps1
+$uri = if ($env:WEBHOOK_URL) { $env:WEBHOOK_URL } else { "http://localhost:8080/webhook/trendyol" }
 
 Write-Host "Benzersiz siparis gonderiliyor (ID: $uniqueId)..." -ForegroundColor Cyan
 Invoke-RestMethod -Uri $uri -Method Post -ContentType "application/json; charset=utf-8" -Body $json -Headers $headers

@@ -12,7 +12,7 @@ Teknik dokümantasyonunuzu (Özellikle "Webhook Integration" ve "Create Test Ord
 
 Sipariş durumu güncellemeleri ("Created", "Cancelled", "Delivered", "UnSupplied") için hazırladığımız `HTTPS POST` endpoint'imiz aşağıdadır:
 
-- **Endpoint URL:** `https://ruyxkthhvhbygwhwswri.supabase.co/functions/v1/trendyol-webhook`
+- **Endpoint URL:** `https://<cloudflare-tunnel-domaininiz>/webhook/trendyol`
 
 *(Not: Opsiyonel path parametreleri kullanmayı düşünmüyoruz, tüm statüler için doğrudan bu kök URL'e gönderim yapılabilir.)*
 

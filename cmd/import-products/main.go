@@ -1,7 +1,7 @@
 // import-products, Zeytuni ürün listesini (CSV veya .xlsx) normalize edip products tablosuna yazar.
 // Idempotent: SKU üzerinden ON DUPLICATE KEY UPDATE. Tekrar çalıştırınca günceller.
 //
-//	go run ./cmd/import-products --file Zeytuni_Ops/urun_listesi.utf8.csv
+//	go run ./cmd/import-products --file data/urun_listesi.utf8.csv
 package main
 
 import (
@@ -23,7 +23,7 @@ import (
 )
 
 func main() {
-	file := flag.String("file", "Zeytuni_Ops/urun_listesi.utf8.csv", "kaynak dosya (.csv veya .xlsx)")
+	file := flag.String("file", "data/urun_listesi.utf8.csv", "kaynak dosya (.csv veya .xlsx)")
 	flag.Parse()
 
 	dsn := os.Getenv("MYSQL_DSN")

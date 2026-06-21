@@ -2,8 +2,6 @@
 **/node_modules
 web/dist
 output.txt
+Zeytuni_Ops/
+tmp/
 *.xlsx
-**/*.png
-**/*.jpg
-**/*.jpeg
-**/*.webp

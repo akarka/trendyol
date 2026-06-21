@@ -31,6 +31,6 @@ COPY --from=builder /app/seed .
 COPY --from=builder /app/import-products .
 COPY --from=builder /app/export-products .
 # import-products varsayılan kaynağı (bootstrap); işletme xlsx'i sonra mount edilerek re-import edilir
-COPY Zeytuni_Ops/urun_listesi.utf8.csv ./Zeytuni_Ops/urun_listesi.utf8.csv
+COPY data/urun_listesi.utf8.csv ./data/urun_listesi.utf8.csv
 
 CMD ["./print-relay"]

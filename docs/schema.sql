@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS settings (
   updated_at DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Ürün kataloğu (normalize). Kaynak: Zeytuni_Ops CSV → cmd/import-products.
+-- Ürün kataloğu (normalize). Kaynak: data/ CSV → cmd/import-products.
 -- Komisyon/KDV-dahil türevleri saklanmaz; price + vat_rate'ten hesaplanabilir.
 CREATE TABLE IF NOT EXISTS categories (
   id   INT AUTO_INCREMENT PRIMARY KEY,

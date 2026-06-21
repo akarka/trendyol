@@ -1,0 +1,68 @@
+SKU,Barkod,Kategori,Ürün,Marka,Ty Ürün Adi,Fiziki Magaza Fiyati,Komisyon Orani,Komisyon Tutari,Komisyon Sonrasi,Aktif/Pasif,KDV,KDV Dahil Satis Fiyati,Frictions,Marketplace Açiklama
+ZYT-SOG-002,2990000000001,Soguk,Yaprak Sarma 500 g,Zeytuni,Ev Yapimi Yaprak Sarma 500 g,400,23.75%,124.5901639,400.00,AKTIF,1%, ?524.59 ,,Manisa Alasehir bag yapraklariyla hazirladigimiz zeytinyagli yaprak sarma. Günlük üretim.
+ZYT-SOG-001,2990000000000,Soguk,Yaprak Sarma 1 kg,Zeytuni,Ev Yapimi Yaprak Sarma 1 kg,800,23.75%,249.1803279,800.00,PASIF,1%," ?1,049.18 ",,
+ZYT-SOG-003,2990000000002,Soguk,Içli Köfte 1 adet,Zeytuni,Içli Köfte Tekli 90 g,120,23.75%,37.37704918,120.00,PASIF,1%, ?157.38 ,,
+ZYT-SOG-004,2990000000003,Soguk,Manti 1 kg,Zeytuni,Ev Yapimi Manti 1 kg,800,23.75%,249.1803279,800.00,PASIF,1%," ?1,049.18 ",,
+ZYT-SOG-005,2990000000004,Soguk,Kelle Paça 1 kase,Zeytuni,Kelle Paça Çorbasi 1 Kase,450,23.75%,140.1639344,450.00,PASIF,1%, ?590.16 ,,
+ZYT-SOG-006,2990000000005,Soguk,Cevizli Içli Köfte 4 Adet 360 g,Zeytuni,Ev Yapimi Cevizli Içli Köfte 4 Adet 360 g,480,23.75%,149.5081967,480.00,AKTIF,1%, ?629.51 ,,"Günlük hazirlanan ev yapimi içli köfte. Ince bulgur kaplamasi ve bol cevizli iç harciyla hazirlanmistir. Mikrodalgada isit, sicak servis et."
+ZYT-ZYT-001,2990000000200,Zeytin,Edremit Çizik Yesil Zeytin 1 kg,Kiryatan,Edremit Çizik Yesil Zeytin 1 kg,550,23.75%,171.3114754,550.00,PASIF,1%, ?721.31 ,,
+ZYT-ZYT-002,2990000000201,Zeytin,Gemlik Yesil Zeytin 1 kg,Kiryatan, Gemlik Yesil Zeytin 1 kg,550,23.75%,171.3114754,550.00,PASIF,1%, ?721.31 ,,
+ZYT-ZYT-003,2990000000202,Zeytin,Kirma Halhal Yesil Zeytin 1 kg,Teksen,Kirma Halhal Yesil Zeytin 1 kg,450,23.75%,140.1639344,450.00,PASIF,1%, ?590.16 ,,
+ZYT-ZYT-004,2990000000203,Zeytin,Akhisar Yagli Sele Zeytin 1 kg,Orfarm,Akhisar Yagli Sele Zeytin 1 kg,550,23.75%,171.3114754,550.00,PASIF,1%, ?721.31 ,,"Manisa Akhisar'da hasat edilen yagli sele siyah zeytin. Etli yapisi ve yogun aromasiyla kahvalti sofralarina, mezelere ve salatalara lezzet katar."
+ZYT-ZYT-005,2990000000204,Zeytin,Yagli Sele Siyah Zeytin 1 kg,Mehmet Çoban,Yagli Sele Siyah Zeytin 1 kg,550,23.75%,171.3114754,550.00,PASIF,1%, ?721.31 ,,
+ZYT-ZYT-006,2990000000205,Zeytin,Kirma Yesil Zeytin 1 kg,Önder Oguz,Kirma Yesil Zeytin 1 kg,500,23.75%,155.7377049,500.00,PASIF,1%, ?655.74 ,,
+ZYT-ZYT-007,2990000000206,Zeytin,Akhisar Yagli Sele Zeytin 500 g,Orfarm,Akhisar Yagli Sele Zeytin 500 g,275,23.75%,85.6557377,275.00,AKTIF,1%, ?360.66 ,,"Manisa Akhisar'da hasat edilen yagli sele siyah zeytin. Etli yapisi ve yogun aromasiyla kahvalti sofralarina, mezelere ve salatalara lezzet katar."
+ZYT-YGT-001,8694415150010,Yogurt,Kaymakli Inek Yogurdu 1 kg,Foça,"Kara Maya Inek Yogurdu, Kaymakli 1000 gr",250,23.75%,77.86885246,250.00,AKTIF,1%, ?327.87 ,,Kara Maya Teknigi ile %100 sütten üretilen kaymakli ev yogurdu.
+ZYT-YGT-002,2990000000401,Yogurt,Kaymakli Manda Yogurdu 1 kg,1Hayat Gida,Kaymakli Manda Yogurdu 1 kg,350,23.75%,109.0163934,350.00,PASIF,1%, ?459.02 ,,
+ZYT-YGT-003,2990000000402,Yogurt,Kaymakli Koyun Yogurdu 1 kg,1Hayat Gida,Kaymakli Koyun Yogurdu 1 kg,300,23.75%,93.44262295,300.00,PASIF,1%, ?393.44 ,,
+ZYT-YGT-004,2990000000403,Yogurt,Inek Yogurdu 1 kg,1Hayat Gida,Inek Yogurdu 1 kg,190,23.75%,59.18032787,190.00,PASIF,1%, ?249.18 ,,
+ZYT-YGT-005,2990000000404,Yogurt,Kaymakli Tava Yogurt Inek 1 kg,Tire Süt ,Kaymakli Tava Yogurdu Inek 1 kg,230,23.75%,71.63934426,230.00,PASIF,1%, ?301.64 ,,
+ZYT-PEY-003,2990000000602,Peynir,Çanakkale Ezine 700 g,Atalay,Çanakkale Ezine Peyniri 700 g,455,23.75%,141.7213115,455.00,AKTIF,1%, ?596.72 ,,"Çanakkale yöresine ait cografi isaretli, geleneksel, tam yagli ezine peyniri."
+ZYT-PEY-006,2990000000605,Peynir,Çanakkale Sepet 500 g,Mezre,Çanakkale Sepet Peyniri 500 g,325,23.75%,101.2295082,325.00,AKTIF,1%, ?426.23 ,,"Çanakkale Yenice'de üretilen, kendine özgü dokusu ve aromasiyla öne çikan geleneksel sepet peyniri."
+ZYT-PEY-001,2990000000600,Peynir,Tulum 1 kg,Yaylacik,Tulum 1 kg,800,23.75%,249.1803279,800.00,PASIF,1%," ?1,049.18 ",,
+ZYT-PEY-002,2990000000601,Peynir,Çanakkale Lavas 1 kg,Atalay,Çanakkale Lavas 1 kg,600,23.75%,186.8852459,600.00,PASIF,1%, ?786.89 ,,
+ZYT-PEY-004,2990000000603,Peynir,Çanakkale Koyun 1 kg,Atalay,Çanakkale Koyun 1 kg,750,23.75%,233.6065574,750.00,PASIF,1%, ?983.61 ,,
+ZYT-PEY-005,2990000000604,Peynir,Balikesir Keçi 1 kg,Has Aygören,Balikesir Keçi 1 kg,850,23.75%,264.7540984,850.00,PASIF,1%," ?1,114.75 ",,
+ZYT-PEY-007,2990000000606,Peynir,Taze Kasar 600 g,Petek,Taze Kasar 600 g,390,23.75%,121.4754098,390.00,PASIF,1%, ?511.48 ,,
+ZYT-PEY-008,2990000000607,Peynir,Çubuk Peynir 500 g,Dalgiçlar Çiftligi,Çubuk Peynir 500 g,325,23.75%,101.2295082,325.00,PASIF,1%, ?426.23 ,,
+ZYT-TER-012,2990000000803,Tereyagi,Çanakkale 500g,Atalay,Köy Tereyagi 500 g,450,23.75%,140.1639344,450.00,AKTIF,1%, ?590.16 ,,Çanakkale Yenice'de geleneksel yayik yöntemiyle üretilen aromatik ve katkisiz köy tereyagi.
+ZYT-TER-009,2990000000800,Tereyagi,Çanakkale Geleneksel 500 g,Mezre,Çanakkale Geleneksel 500 g,450,23.75%,140.1639344,450.00,PASIF,1%, ?590.16 ,,
+ZYT-TER-010,2990000000801,Tereyagi,Çanakkale Geleneksel 1 kg,Mezre,Çanakkale Geleneksel 1 kg,850,23.75%,264.7540984,850.00,PASIF,1%," ?1,114.75 ",,
+ZYT-TER-011,2990000000802,Tereyagi,Trabzon Tereyagi 500 g,61 Yaylacik,Trabzon Tereyagi 500 g,850,23.75%,264.7540984,850.00,AKTIF,1%," ?1,114.75 ",,
+ZYT-TER-012,2990000000803,Tereyagi,Çanakkale 1 kg,Atalay,Çanakkale 1 kg,800,23.75%,249.1803279,800.00,AKTIF,1%," ?1,049.18 ",,
+ZYT-REC-001,2990000001000,Reçel,Çilek Reçeli 700 g,Zeytuni,Ev Yapimi Çilek Reçeli 700 g,600,23.75%,186.8852459,600.00,AKTIF,1%, ?786.89 ,,Mevsiminde alip kendi kazanlarimizda kaynattigimiz çileklerden. Koruyucu içermez.
+ZYT-REC-003,2990000001002,Reçel,Seftali Reçeli 700 g,Zeytuni,Ev Yapimi Seftali Reçeli 700 g,600,23.75%,186.8852459,600.00,AKTIF,1%, ?786.89 ,,"Mevsiminde alip, dilimleyip, pancar sekeriyle kaynattigimiz seftalilerle hazirlanmistir. Koruyucu içermez."
+ZYT-REC-006,2990000001005,Reçel,Turunç Kabugu Reçeli 700 g,Zeytuni,Ev Yapimi Turunç Kabugu Reçeli 700 g,600,23.75%,186.8852459,600.00,AKTIF,1%, ?786.89 ,,Mevsiminde islenen turunç kabuklariyla hazirlanan yogun narenciye reçeli. Koruyucu içermez.
+ZYT-REC-005,2990000001004,Reçel,Incir Reçeli 700 g,Zeytuni,Ev Yapimi Incir Reçeli 700 g,600,23.75%,186.8852459,600.00,AKTIF,1%, ?786.89 ,,Mevsiminde aldigimiz incirlerin aroma ve dokularini kaybetmeden hazirladigimiz reçel. Koruyucu içermez.
+ZYT-REC-002,2990000001001,Reçel,Erik Reçeli 700 g,Zeytuni,Mevsimlik Erik Reçeli 700 g,600,23.75%,186.8852459,600.00,PASIF,1%, ?786.89 ,,
+ZYT-REC-004,2990000001003,Reçel,Kiraz Reçeli 700 g,Zeytuni,Mevsimlik Kiraz Reçeli 700 g,600,23.75%,186.8852459,600.00,PASIF,1%, ?786.89 ,,
+ZYT-REC-007,2990000001006,Reçel,Patlican Reçeli 700 g,Zeytuni,Ev Yapimi Patlican Reçeli 700 g,650,23.75%,202.4590164,650.00,PASIF,1%, ?852.46 ,,
+ZYT-REC-008,2990000001007,Reçel,Kayisi Reçeli 700 g,Zeytuni,Mevsimlik Kayisi Reçeli 700 g,600,23.75%,186.8852459,600.00,PASIF,1%, ?786.89 ,,
+ZYT-REC-009,2990000001008,Reçel,Nar Reçeli 700 g,Zeytuni,Ev Yapimi Nar Reçeli 700 g,600,23.75%,186.8852459,600.00,PASIF,1%, ?786.89 ,,
+ZYT-REC-012,2990000001011,Reçel,Visne Reçeli 700 g,Zeytuni,Mevsimlik Visne Reçeli 700 g,600,23.75%,186.8852459,600.00,PASIF,1%, ?786.89 ,,
+ZYT-REC-013,2990000001012,Reçel,Ayva Reçeli 700 g,Zeytuni,Mevsimlik Ayva Reçeli 700 g,600,23.75%,186.8852459,600.00,PASIF,1%, ?786.89 ,,
+ZYT-REC-014,2990000001013,Reçel,Ceviz Reçeli 700 g,Zeytuni,Ev Yapimi Ceviz Reçeli 700 g,700,23.75%,218.0327869,700.00,PASIF,1%, ?918.03 ,,
+ZYT-REC-015,2990000001014,Reçel,Patates Reçeli 700 g,Zeytuni,Ev Yapimi Patates Reçeli 700 g,650,23.75%,202.4590164,650.00,PASIF,1%, ?852.46 ,,
+ZYT-MRM-001,2990000001200,Marmelat,Aliç Marmelati 700 g,Zeytuni,Ev Yapimi Aliç Marmelati 700 g,550,23.75%,171.3114754,550.00,PASIF,1%, ?721.31 ,,
+ZYT-MRM-002,2990000001201,Marmelat,Kizilcik Marmelati 700 g,Zeytuni,Ev Yapimi Kizilcik Marmelati 700 g,650,23.75%,202.4590164,650.00,AKTIF,1%, ?852.46 ,,
+ZYT-MRM-003,2990000001202,Marmelat,Kusburnu Marmelati 700 g,Zeytuni,Ev Yapimi Kusburnu Marmelati 700 g,650,23.75%,202.4590164,650.00,AKTIF,1%, ?852.46 ,,
+ZYT-TRS-001,2990000001400,Tursu,Karnabahar Tursusu 0 g,Zeytuni,Ev Yapimi Karnabahar Tursusu 0 g,300,23.75%,93.44262295,300.00,PASIF,1%, ?393.44 ,,
+ZYT-TRS-002,2990000001401,Tursu,Bamya Tursusu 0 g,Zeytuni,Ev Yapimi Bamya Tursusu 0 g,350,23.75%,109.0163934,350.00,PASIF,1%, ?459.02 ,,
+ZYT-TRS-003,2990000001402,Tursu,Karisik Tursu 0 g,Zeytuni,Ev Yapimi Karisik Tursu 0 g,300,23.75%,93.44262295,300.00,PASIF,1%, ?393.44 ,,
+ZYT-TRS-004,2990000001403,Tursu,Aci Biber Tursusu 0 g,Zeytuni,Ev Yapimi Aci Biber Tursusu 0 g,300,23.75%,93.44262295,300.00,PASIF,1%, ?393.44 ,,
+ZYT-TRS-005,2990000001404,Tursu,Pancar Tursusu 0 g,Zeytuni,Ev Yapimi Pancar Tursusu 0 g,300,23.75%,93.44262295,300.00,PASIF,1%, ?393.44 ,,
+ZYT-TRS-006,2990000001405,Tursu,Salatalik Tursusu 0 g,Zeytuni,Ev Yapimi Salatalik Tursusu 0 g,300,23.75%,93.44262295,300.00,PASIF,1%, ?393.44 ,,
+ZYT-TRS-007,2990000001406,Tursu,Kornison Tursusu 0 g,Zeytuni,Ev Yapimi Kornison Tursusu 0 g,300,23.75%,93.44262295,300.00,PASIF,1%, ?393.44 ,,
+ZYT-SRK-013,2990000001600,Sirke,Elma Sirkesi 0 L,Zeytuni,Elma Sirkesi 0 L,450,23.75%,140.1639344,450.00,PASIF,10%, ?590.16 ,,
+ZYT-SRK-014,2990000001601,Sirke,Üzüm Sirkesi 0 L,Zeytuni,Üzüm Sirkesi 0 L,450,23.75%,140.1639344,450.00,PASIF,10%, ?590.16 ,,
+ZYT-SRK-015,2990000001602,Sirke,Enginar Sirkesi 0 L,Zeytuni,Enginar Sirkesi 0 L,500,23.75%,155.7377049,500.00,PASIF,10%, ?655.74 ,,
+ZYT-SRK-016,2990000001603,Sirke,Incir Sirkesi 0 L,Zeytuni,Incir Sirkesi 0 L,500,23.75%,155.7377049,500.00,PASIF,10%, ?655.74 ,,
+ZYT-SLC-001,2990000001800,Salça,Domates Salçasi 700 g,Zeytuni,Ev Yapimi Domates Salçasi 700 g,300,23.75%,93.44262295,300.00,PASIF,1%, ?393.44 ,,
+ZYT-SLC-002,2990000001801,Salça,Aci Biber Salçasi 700 g,Zeytuni,Katkisiz Aci Biber Salçasi 700 g,400,23.75%,124.5901639,400.00,PASIF,1%, ?524.59 ,,
+ZYT-SLC-003,2990000001802,Salça,Tatli Biber Salçasi 700 g,Zeytuni,Katkisiz Tatli Biber Salçasi 700 g,400,23.75%,124.5901639,400.00,PASIF,1%, ?524.59 ,,
+ZYT-SOS-017,2990000002000,Sos,Nar Eksisi,Zeytuni,Nar Eksisi,300,23.75%,93.44262295,300.00,PASIF,10%, ?393.44 ,,
+ZYT-PKZ-018,2990000002200,Pekmez,Üzüm Pekmezi 850 g,Zeytuni,Üzüm Pekmezi 0 g,300,23.75%,93.44262295,300.00,PASIF,1%, ?393.44 ,,
+ZYT-BAL-019,2990000002400,Bal,Çiçek Bali 800 g,Zeytuni,Çiçek Bali 800 g,850,23.75%,264.7540984,850.00,PASIF,1%," ?1,114.75 ",,
+ZYT-KYM-001,2990000002600,Kuruyemis,Ceviz Iç 1 kg,Zeytuni,Taze Ceviz Iç 1 kg,950,23.75%,295.9016393,950.00,PASIF,10%," ?1,245.90 ",,
+ZYT-KYM-002,2990000002601,Kuruyemis,Ceviz Kabuklu 1 kg,Zeytuni,Taze Ceviz Kabuklu 1 kg,400,23.75%,124.5901639,400.00,PASIF,10%, ?524.59 ,,
+ZYT-KYM-003,2990000002602,Kuruyemis,Incir Kurusu 1 kg,Zeytuni,Incir Kurusu 1 kg,850,23.75%,264.7540984,850.00,PASIF,10%," ?1,114.75 ",,

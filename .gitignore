@@ -4,3 +4,10 @@ REF/
 vendor/
 main
 order*
+*.pdf
+# işletmenin ayrı git reposu (nested) — bu projeye dahil değil
+Zeytuni_Ops/
+# geçici çıktılar
+tmp/
+*.xlsx
+~$*
