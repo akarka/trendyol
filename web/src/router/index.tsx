@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import { Layout } from '../components/Layout'
 import { LoginPage } from '../pages/LoginPage'
 import { OrdersPage } from '../pages/OrdersPage'
+import { ManualOrderPage } from '../pages/ManualOrderPage'
 import { PrinterPage } from '../pages/PrinterPage'
 import { SettingsPage } from '../pages/SettingsPage'
 import { ReactNode } from 'react'
@@ -25,6 +26,7 @@ export function AppRouter() {
         }
       >
         <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/manual" element={<ManualOrderPage />} />
         <Route path="/printer" element={<PrinterPage />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Route>

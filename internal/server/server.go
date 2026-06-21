@@ -46,8 +46,10 @@ func New(cfg *config.Config, db *sqlx.DB, printCh chan<- PrintTask, static fs.FS
 	r.Group(func(r chi.Router) {
 		r.Use(auth.JWTMiddleware(cfg.JWTSecret))
 		r.Get("/api/orders", s.handleListOrders)
+		r.Post("/api/orders/manual", s.handleManualOrder)
 		r.Get("/api/orders/{orderID}", s.handleGetOrder)
 		r.Post("/api/orders/{orderID}/print", s.handleReprint)
+		r.Get("/api/products", s.handleListProducts)
 		r.Get("/api/printer/status", s.handlePrinterStatus)
 		r.Get("/api/logs", s.handleLogs)
 		r.Get("/api/settings", s.handleGetSettings)

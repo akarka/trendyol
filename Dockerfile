@@ -18,11 +18,19 @@ COPY . .
 COPY --from=web-builder /web/dist ./web/dist
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o /app/print-relay ./cmd/app
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/seed ./cmd/seed
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/import-products ./cmd/import-products
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/export-products ./cmd/export-products
 
 FROM alpine:latest
 
 WORKDIR /app
 
 COPY --from=builder /app/print-relay .
+COPY --from=builder /app/seed .
+COPY --from=builder /app/import-products .
+COPY --from=builder /app/export-products .
+# import-products varsayılan kaynağı (bootstrap); işletme xlsx'i sonra mount edilerek re-import edilir
+COPY Zeytuni_Ops/urun_listesi.utf8.csv ./Zeytuni_Ops/urun_listesi.utf8.csv
 
 CMD ["./print-relay"]

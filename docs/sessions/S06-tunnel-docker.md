@@ -1,8 +1,10 @@
 # S06 — Cloudflare Tunnel + Docker Compose (full stack + e2e)
 
-**Durum:** 🔲 Bekliyor
+**Durum:** ✅ Tamamlandı
 **Bağımlılık:** S01–S05 tamamlandı (✅)
 **Sonraki:** Proje tamamlandı
+
+> Yapılanlar: Dockerfile'a `seed` binary'si eklendi (runtime'a kopyalanıyor); compose'a mysql healthcheck + `print-relay` `service_healthy` bağımlılığı + `cloudflared` servisi (`profiles: ["tunnel"]`); `.env.example`'a `CF_TUNNEL_TOKEN`; README yeni mimariye (.env → compose → seed → Cloudflare → webhook) göre yeniden yazıldı.
 
 > Bu dosya kendi kendine yeterlidir: yeni session yalnızca bunu okuyarak başlayabilir.
 > Davranış kuralları için `CLAUDE.md` (kısa/doğrudan, Türkçe, yorum yok) geçerlidir.

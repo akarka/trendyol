@@ -32,6 +32,10 @@ func main() {
 	}
 	defer database.Close()
 
+	if err := db.EnsureCatalogTables(database); err != nil {
+		log.Printf("[MIGRATE_UYARI] katalog tabloları oluşturulamadı: %v", err)
+	}
+
 	printCh := make(chan server.PrintTask, 64)
 	go runPrinter(printCh, database, cfg)
 

@@ -1,0 +1,9 @@
+**/.git
+**/node_modules
+web/dist
+output.txt
+*.xlsx
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.webp

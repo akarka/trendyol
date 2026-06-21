@@ -32,6 +32,39 @@ CREATE TABLE IF NOT EXISTS settings (
   updated_at DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- Ürün kataloğu (normalize). Kaynak: Zeytuni_Ops CSV → cmd/import-products.
+-- Komisyon/KDV-dahil türevleri saklanmaz; price + vat_rate'ten hesaplanabilir.
+CREATE TABLE IF NOT EXISTS categories (
+  id   INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(64) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS brands (
+  id   INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(64) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS products (
+  sku              VARCHAR(40)   PRIMARY KEY,
+  barcode          VARCHAR(40)   NOT NULL,
+  name             VARCHAR(255)  NOT NULL,   -- iç ad (CSV 'Ürün')
+  marketplace_name VARCHAR(255),             -- 'Ty Ürün Adı'
+  category_id      INT           NOT NULL,
+  brand_id         INT,
+  net_weight       DECIMAL(10,3),            -- NULL = gramaj eksik (needs_fix)
+  unit             VARCHAR(8),               -- g|kg|ml|l|adet|kase
+  price            DECIMAL(10,2) NOT NULL,   -- 'Fiziki Mağaza Fiyatı'
+  vat_rate         DECIMAL(5,2),             -- KDV % (ürüne göre değişir, türetilemez)
+  is_active        BOOLEAN       NOT NULL DEFAULT 0,
+  needs_fix        BOOLEAN       NOT NULL DEFAULT 0,  -- import'ta tespit edilen veri sorunu
+  description      TEXT,
+  created_at       DATETIME      DEFAULT CURRENT_TIMESTAMP,
+  updated_at       DATETIME      DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_barcode (barcode),
+  CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES categories(id),
+  CONSTRAINT fk_products_brand    FOREIGN KEY (brand_id)    REFERENCES brands(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- İlk admin; gerçek şifre için: go run ./cmd/seed --username admin --password <pass>
 INSERT IGNORE INTO users (username, password_hash, role)
 VALUES ('admin', '$2a$10$PLACEHOLDER', 'admin');

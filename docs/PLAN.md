@@ -17,7 +17,9 @@ Trendyol → Cloudflare Tunnel → Go HTTP Server → MySQL 8 → Printer
 | S03 | [REST API + JWT Auth](sessions/S03-rest-api-auth.md) | login, orders, print-jobs, settings, printer-status endpoint'leri | ✅ |
 | S04 | [React Setup + Auth UI](sessions/S04-react-setup.md) | Vite + React + Tailwind, login sayfası, API client, embed | ✅ |
 | S05 | [React Pages](sessions/S05-react-pages.md) | Order list, order detail, printer status/log, settings | ✅ |
-| S06 | [Cloudflare + Docker](sessions/S06-tunnel-docker.md) | cloudflared, docker-compose full stack, e2e test | 🔲 |
+| S06 | [Cloudflare + Docker](sessions/S06-tunnel-docker.md) | cloudflared, docker-compose full stack, e2e test | ✅ |
+| S07 | [Zeytuni Ürün İnceleme](sessions/S07-zeytuni-urunler-review.md) | ürün verisi kalite analizi + `products` şema/import taslağı (kod yok) → [rapor](zeytuni-urunler-rapor.md) | ✅ |
+| S08 | [Manuel Sipariş + Katalog](sessions/S08-manuel-siparis-katalog.md) | normalize products şema/import/export (.xlsx round-trip), `/api/orders/manual`, canvas bitmap baskı, ManualOrderPage | ✅ |
 
 ## Durum Kodları
 - 🔲 Bekliyor
@@ -28,7 +30,13 @@ Trendyol → Cloudflare Tunnel → Go HTTP Server → MySQL 8 → Printer
 
 S01 → S02 → S03 → S04 → S05 → S06
 
-Her session bir öncekinin çıktısına bağlı.
+Her session bir öncekinin çıktısına bağlı. S07 ana zincire bağımlı değil — paralel discovery (kod/şema değiştirmez).
+
+## S07 — Zeytuni Ürün Verisi (discovery)
+
+`docs/zeytuni-urunler-rapor.md`: 67 ürün / 14 kategori (15 AKTIF · 52 PASIF) kalite analizi.
+Kararlar: join **SKU** üzerinden (Trendyol endpoint gelince barkoda geçiş); import **tüm 67** ürün (`is_active` flag); çift SKU `ZYT-TER-012` dükkana sorulacak.
+`products` şema taslağı + idempotent `cmd/import-products` planı raporda — **uygulanmadı**, ayrı implementasyon session'ı bekliyor.
 
 ## Uygulanan Durum (S01–S05)
 

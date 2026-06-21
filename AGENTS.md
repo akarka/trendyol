@@ -73,7 +73,7 @@ web/dist/                      # build çıktısı (git'te yok; Docker build ür
 | S03 | REST API + JWT Auth | ✅ Tamamlandı |
 | S04 | React Setup + Auth UI | ✅ Tamamlandı |
 | S05 | React Pages | ✅ Tamamlandı |
-| S06 | Cloudflare Tunnel + Docker Compose | 🔲 Bekliyor |
+| S06 | Cloudflare Tunnel + Docker Compose | ✅ Tamamlandı |
 
 ---
 
