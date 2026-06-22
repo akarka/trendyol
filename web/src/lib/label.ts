@@ -2,6 +2,7 @@
 // Aynı bitmap thermal'a geçişte ESC/POS raster için yeniden kullanılabilir.
 
 import { cellPosition, LabelLayout } from './labelLayout'
+import { canvasToMonoBmp } from './bmp'
 
 export interface LabelLineItem {
   quantity: number
@@ -83,6 +84,17 @@ export function renderLabelCanvas(lines: string[], scale = 2): HTMLCanvasElement
 
 export function labelDataUrl(lines: string[]): string {
   return renderLabelCanvas(lines).toDataURL('image/png')
+}
+
+// downloadLabelBmp, etiketi 1-bit monokrom .bmp dosyası olarak indirir.
+export function downloadLabelBmp(lines: string[], filename: string): void {
+  const blob = canvasToMonoBmp(renderLabelCanvas(lines))
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename.endsWith('.bmp') ? filename : `${filename}.bmp`
+  a.click()
+  URL.revokeObjectURL(url)
 }
 
 // printLabel, etiketi A4 sayfasında verilen yerleşime göre seçilen hücreye (cellIndex) bastırır.

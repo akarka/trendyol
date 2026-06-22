@@ -46,3 +46,8 @@ func (s *Server) handleLogin(w http.ResponseWriter, r *http.Request) {
 
 	writeJSON(w, http.StatusOK, map[string]string{"token": token, "role": user.Role})
 }
+
+// handleConfig, frontend'in auth'u atlayıp atlamayacağını bilmesi için public toggle döner.
+func (s *Server) handleConfig(w http.ResponseWriter, r *http.Request) {
+	writeJSON(w, http.StatusOK, map[string]bool{"rbac_enabled": s.cfg.RBACEnabled})
+}

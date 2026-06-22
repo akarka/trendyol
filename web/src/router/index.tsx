@@ -9,7 +9,9 @@ import { SettingsPage } from '../pages/SettingsPage'
 import { ReactNode } from 'react'
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
-  const { token } = useAuth()
+  const { token, rbacEnabled } = useAuth()
+  if (rbacEnabled === null) return null // config yükleniyor
+  if (!rbacEnabled) return <>{children}</> // auth kapalı → doğrudan erişim
   if (!token) return <Navigate to="/login" replace />
   return <>{children}</>
 }

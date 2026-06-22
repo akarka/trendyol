@@ -9,13 +9,15 @@ const NAV = [
 ]
 
 export function Layout() {
-  const { logout } = useAuth()
+  const { logout, rbacEnabled } = useAuth()
   const navigate = useNavigate()
 
   const onLogout = () => {
     logout()
     navigate('/login', { replace: true })
   }
+
+  const showLogout = rbacEnabled !== false
 
   return (
     <div className="flex min-h-full">
@@ -38,21 +40,25 @@ export function Layout() {
             </NavLink>
           ))}
         </nav>
-        <button
-          onClick={onLogout}
-          className="m-2 rounded px-3 py-2 text-left text-sm text-gray-600 hover:bg-gray-100"
-        >
-          Çıkış
-        </button>
+        {showLogout && (
+          <button
+            onClick={onLogout}
+            className="m-2 rounded px-3 py-2 text-left text-sm text-gray-600 hover:bg-gray-100"
+          >
+            Çıkış
+          </button>
+        )}
       </aside>
 
       {/* Content */}
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex items-center justify-between bg-white px-4 py-3 shadow sm:hidden">
           <span className="font-semibold">Yazıcı Yönetimi</span>
-          <button onClick={onLogout} className="text-sm text-gray-600">
-            Çıkış
-          </button>
+          {showLogout && (
+            <button onClick={onLogout} className="text-sm text-gray-600">
+              Çıkış
+            </button>
+          )}
         </header>
 
         <main className="flex-1 overflow-y-auto p-4 pb-20 sm:pb-4">

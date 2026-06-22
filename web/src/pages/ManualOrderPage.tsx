@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getProducts, Product } from '../api/products'
 import { createManualOrder } from '../api/orders'
 import { getSettings } from '../api/settings'
-import { buildLabelLines, labelDataUrl, printLabel } from '../lib/label'
+import { buildLabelLines, labelDataUrl, printLabel, downloadLabelBmp } from '../lib/label'
 import { cellCount, parseLayout } from '../lib/labelLayout'
 import { Spinner } from '../components/Spinner'
 import { SheetPreview } from '../components/SheetPreview'
@@ -174,6 +174,18 @@ export function ManualOrderPage() {
                   <span className="text-sm text-gray-400">Ürün seçince önizleme görünür</span>
                 )}
               </div>
+              <button
+                onClick={() =>
+                  downloadLabelBmp(
+                    previewLines,
+                    `etiket-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '')}`,
+                  )
+                }
+                disabled={items.length === 0}
+                className="mt-2 h-9 rounded border border-gray-300 px-3 text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-40"
+              >
+                .bmp indir
+              </button>
             </div>
 
             <div>

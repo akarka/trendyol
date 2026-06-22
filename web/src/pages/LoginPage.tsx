@@ -1,16 +1,18 @@
 import { FormEvent, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { login } from '../api/auth'
 import { useAuth } from '../context/AuthContext'
 import { Spinner } from '../components/Spinner'
 
 export function LoginPage() {
-  const { login: setAuth } = useAuth()
+  const { login: setAuth, rbacEnabled } = useAuth()
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  if (rbacEnabled === false) return <Navigate to="/orders" replace />
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault()

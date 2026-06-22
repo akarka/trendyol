@@ -12,6 +12,7 @@ type Config struct {
 	PrinterDevice   string
 	LogLevel        string
 	TestMode        bool
+	RBACEnabled     bool
 }
 
 func Load() *Config {
@@ -23,6 +24,7 @@ func Load() *Config {
 		PrinterDevice:   os.Getenv("PRINTER_DEVICE"),
 		LogLevel:        os.Getenv("LOG_LEVEL"),
 		TestMode:        os.Getenv("TEST_MODE") == "true",
+		RBACEnabled:     os.Getenv("RBAC_ENABLED") != "false", // set değilse açık; sadece "false" kapatır
 	}
 
 	if cfg.MySQLDSN == "" || cfg.JWTSecret == "" {

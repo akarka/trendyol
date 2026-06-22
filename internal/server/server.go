@@ -42,9 +42,12 @@ func New(cfg *config.Config, db *sqlx.DB, printCh chan<- PrintTask, static fs.FS
 	})
 
 	r.Post("/api/auth/login", s.handleLogin)
+	r.Get("/api/config", s.handleConfig)
 
 	r.Group(func(r chi.Router) {
-		r.Use(auth.JWTMiddleware(cfg.JWTSecret))
+		if cfg.RBACEnabled {
+			r.Use(auth.JWTMiddleware(cfg.JWTSecret))
+		}
 		r.Get("/api/orders", s.handleListOrders)
 		r.Post("/api/orders/manual", s.handleManualOrder)
 		r.Get("/api/orders/{orderID}", s.handleGetOrder)
