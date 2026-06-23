@@ -28,11 +28,15 @@ Geliştirme ilerlemesi, mimari detaylar ve session geçmişi için bkz. [docs/PL
    cd trendyol
    ```
 
-### 4. Ayar Dosyasını (.env) Doldurma
-1. Klasördeki `.env.example` dosyasının bir kopyasını oluşturup adını `.env` yapın.
-2. İçindeki `XXX` değerlerini doldurun:
-   - `MYSQL_ROOT_PASSWORD`, `MYSQL_PASSWORD` → MySQL şifreleri (kendiniz belirleyin).
-   - `MYSQL_DSN` içindeki kullanıcı/şifre, `MYSQL_USER`/`MYSQL_PASSWORD` ile **aynı** olmalı; host `mysql` kalmalı.
+### 4. Ayar Dosyasını (.env) Oluşturma
+1. `.env.example`'ı `.env` olarak kopyalayın:
+   ```powershell
+   cp .env.example .env
+   ```
+   Varsayılan değerlerle **olduğu gibi çalışır**; lokal denemek için doldurmanız gereken bir şey yok.
+2. Canlıya çıkarken şu değerleri kendi değerlerinizle değiştirin:
+   - `MYSQL_ROOT_PASSWORD`, `MYSQL_PASSWORD` → MySQL şifreleri.
+   - `MYSQL_DSN` içindeki şifre, `MYSQL_PASSWORD` ile **aynı** olmalı; host `mysql` kalmalı.
    - `JWT_SECRET` → uzun rastgele bir metin (web girişini güvene alır).
    - `WEBHOOK_USERNAME`, `WEBHOOK_PASSWORD` → Trendyol webhook'unun kullanacağı kullanıcı/şifre.
    - `CF_TUNNEL_TOKEN` → Cloudflare Tunnel kullanacaksanız (bkz. Adım 7); şimdilik boş bırakabilirsiniz.
