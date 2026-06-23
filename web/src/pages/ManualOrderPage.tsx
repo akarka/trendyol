@@ -9,6 +9,7 @@ import { Spinner } from '../components/Spinner'
 import { SheetPreview } from '../components/SheetPreview'
 import { LabelPaddingBox } from '../components/LabelPaddingBox'
 import { useToast } from '../context/ToastContext'
+import { useLocalState } from '../lib/useLocalState'
 
 // Sayfa eni/boyu ve sütun/satır sayısını düzenler. Etiket eni/boyu bunlardan
 // int(sayfa/sütun) ve int(sayfa/satır) olarak türetilir (bkz. lib/labelLayout.normalizeLayout) —
@@ -56,10 +57,12 @@ interface Row {
 }
 
 export function ManualOrderPage() {
-  const [customer, setCustomer] = useState('')
-  const [rows, setRows] = useState<Row[]>([{ sku: '', quantity: 1 }])
-  const [activeOnly, setActiveOnly] = useState(true)
-  const [cell, setCell] = useState(0)
+  // Taslak (müşteri/ürün satırları/hücre seçimi) localStorage'da tutulur — sayfa
+  // değişse veya yenilense de manuel sipariş girişi kaybolmaz.
+  const [customer, setCustomer] = useLocalState('manual-order:customer', '')
+  const [rows, setRows] = useLocalState<Row[]>('manual-order:rows', [{ sku: '', quantity: 1 }])
+  const [activeOnly, setActiveOnly] = useLocalState('manual-order:active-only', true)
+  const [cell, setCell] = useLocalState('manual-order:cell', 0)
   const toast = useToast()
   const qc = useQueryClient()
 
@@ -170,9 +173,20 @@ export function ManualOrderPage() {
 
   const canSave = items.length > 0 && !save.isPending
 
+  const clearDraft = () => {
+    setCustomer('')
+    setRows([{ sku: '', quantity: 1 }])
+    setCell(0)
+  }
+
   return (
     <div className="max-w-3xl">
-      <h1 className="mb-4 text-xl font-semibold">Manuel Sipariş</h1>
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="text-xl font-semibold">Manuel Sipariş</h1>
+        <button onClick={clearDraft} className="text-xs text-gray-500 underline">
+          Temizle
+        </button>
+      </div>
 
       {isLoading ? (
         <div className="flex justify-center py-10 text-gray-400">

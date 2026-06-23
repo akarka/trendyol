@@ -1,8 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createProduct, getBrands, getCategories, Product, ProductInput, updateProduct } from '../api/products'
 import { Spinner } from './Spinner'
 import { useToast } from '../context/ToastContext'
+import { clearLocalState } from '../lib/useLocalState'
+
+const DRAFT_KEY = 'product-create:draft'
 
 function toInput(p?: Product): ProductInput {
   return {
@@ -21,19 +24,41 @@ function toInput(p?: Product): ProductInput {
   }
 }
 
+// Yeni ürün taslağı (isEdit=false) localStorage'da tutulur — modal kapatılıp tekrar
+// açılsa veya sayfa yenilense de girilen bilgiler kaybolmaz. Düzenleme modunda taslak
+// kullanılmaz; form her zaman sunucudaki güncel ürün verisiyle başlar.
+function loadDraft(): ProductInput {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY)
+    return raw ? (JSON.parse(raw) as ProductInput) : toInput()
+  } catch {
+    return toInput()
+  }
+}
+
 export function ProductFormModal({ product, onClose }: { product?: Product; onClose: () => void }) {
   const isEdit = !!product
-  const [form, setForm] = useState<ProductInput>(toInput(product))
+  const [form, setForm] = useState<ProductInput>(() => (isEdit ? toInput(product) : loadDraft()))
   const toast = useToast()
   const qc = useQueryClient()
 
   const { data: categories } = useQuery({ queryKey: ['categories'], queryFn: getCategories })
   const { data: brands } = useQuery({ queryKey: ['brands'], queryFn: getBrands })
 
+  useEffect(() => {
+    if (isEdit) return
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(form))
+    } catch {
+      // yoksay
+    }
+  }, [form, isEdit])
+
   const save = useMutation({
     mutationFn: () => (isEdit ? updateProduct(product!.sku, form) : createProduct(form)),
     onSuccess: () => {
       toast.show('success', isEdit ? 'Ürün güncellendi' : 'Ürün eklendi')
+      if (!isEdit) clearLocalState(DRAFT_KEY)
       qc.invalidateQueries({ queryKey: ['products'] })
       qc.invalidateQueries({ queryKey: ['categories'] })
       qc.invalidateQueries({ queryKey: ['brands'] })
@@ -54,7 +79,20 @@ export function ProductFormModal({ product, onClose }: { product?: Product; onCl
         className="max-h-[90vh] w-full overflow-y-auto bg-white p-5 sm:max-w-lg sm:rounded-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="mb-4 text-lg font-semibold">{isEdit ? 'Ürünü Düzenle' : 'Yeni Ürün'}</h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold">{isEdit ? 'Ürünü Düzenle' : 'Yeni Ürün'}</h2>
+          {!isEdit && (
+            <button
+              onClick={() => {
+                setForm(toInput())
+                clearLocalState(DRAFT_KEY)
+              }}
+              className="text-xs text-gray-500 underline"
+            >
+              Temizle
+            </button>
+          )}
+        </div>
 
         <div className="grid grid-cols-2 gap-3 text-sm">
           <label className="col-span-1">
