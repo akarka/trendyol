@@ -6,7 +6,6 @@ import { OrdersPage } from '../pages/OrdersPage'
 import { ManualOrderPage } from '../pages/ManualOrderPage'
 import { ProductsPage } from '../pages/ProductsPage'
 import { PrinterPage } from '../pages/PrinterPage'
-import { SettingsPage } from '../pages/SettingsPage'
 import { BackupPage } from '../pages/BackupPage'
 import { ReactNode } from 'react'
 
@@ -33,7 +32,6 @@ export function AppRouter() {
         <Route path="/manual" element={<ManualOrderPage />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/printer" element={<PrinterPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
         <Route path="/backup" element={<BackupPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/orders" replace />} />

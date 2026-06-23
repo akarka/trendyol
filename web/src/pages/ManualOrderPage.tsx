@@ -1,13 +1,54 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getProducts, Product } from '../api/products'
 import { createManualOrder } from '../api/orders'
-import { getSettings } from '../api/settings'
+import { getSettings, updateSetting } from '../api/settings'
 import { buildLabelLines, labelDataUrl, printLabel, downloadLabelBmp } from '../lib/label'
-import { cellCount, parseLayout } from '../lib/labelLayout'
+import { cellCount, LABEL_LAYOUT_KEY, LabelLayout, parseLayout } from '../lib/labelLayout'
 import { Spinner } from '../components/Spinner'
 import { SheetPreview } from '../components/SheetPreview'
+import { LabelPaddingBox } from '../components/LabelPaddingBox'
 import { useToast } from '../context/ToastContext'
+
+// Sayfa eni/boyu ve sütun/satır sayısını düzenler. Etiket eni/boyu bunlardan
+// int(sayfa/sütun) ve int(sayfa/satır) olarak türetilir (bkz. lib/labelLayout.normalizeLayout) —
+// böylece sayfada hiçbir zaman boş hücre/şerit kalmaz.
+function PaperSizeFields({
+  pageWidthMm,
+  pageHeightMm,
+  onChange,
+}: {
+  pageWidthMm: number
+  pageHeightMm: number
+  onChange: (patch: { pageWidthMm?: number; pageHeightMm?: number }) => void
+}) {
+  return (
+    <div className="flex items-end gap-2 text-xs text-gray-600">
+      <label>
+        Sayfa En (mm)
+        <input
+          type="number"
+          step="any"
+          min={1}
+          value={pageWidthMm}
+          onChange={(e) => onChange({ pageWidthMm: Number(e.target.value) || 0 })}
+          className="mt-1 block h-8 w-20 rounded border border-gray-300 px-2"
+        />
+      </label>
+      <label>
+        Sayfa Boy (mm)
+        <input
+          type="number"
+          step="any"
+          min={1}
+          value={pageHeightMm}
+          onChange={(e) => onChange({ pageHeightMm: Number(e.target.value) || 0 })}
+          className="mt-1 block h-8 w-20 rounded border border-gray-300 px-2"
+        />
+      </label>
+    </div>
+  )
+}
 
 interface Row {
   sku: string
@@ -30,6 +71,51 @@ export function ManualOrderPage() {
   const { data: settings } = useQuery({ queryKey: ['settings'], queryFn: getSettings })
   const layout = useMemo(() => parseLayout(settings), [settings])
   const cells = cellCount(layout)
+
+  // Kağıt Ayarları: sayfa eni/boyu + sütun/satır. Etiket eni/boyu bunlardan türetilir.
+  const [paper, setPaper] = useState<Pick<LabelLayout, 'pageWidthMm' | 'pageHeightMm' | 'columns' | 'rows'>>({
+    pageWidthMm: layout.pageWidthMm,
+    pageHeightMm: layout.pageHeightMm,
+    columns: layout.columns,
+    rows: layout.rows,
+  })
+  useEffect(() => {
+    setPaper({
+      pageWidthMm: layout.pageWidthMm,
+      pageHeightMm: layout.pageHeightMm,
+      columns: layout.columns,
+      rows: layout.rows,
+    })
+  }, [layout.pageWidthMm, layout.pageHeightMm, layout.columns, layout.rows])
+
+  const paperDirty =
+    paper.pageWidthMm !== layout.pageWidthMm ||
+    paper.pageHeightMm !== layout.pageHeightMm ||
+    paper.columns !== layout.columns ||
+    paper.rows !== layout.rows
+
+  const savePaper = useMutation({
+    mutationFn: () => updateSetting(LABEL_LAYOUT_KEY, JSON.stringify({ ...layout, ...paper })),
+    onSuccess: () => {
+      toast.show('success', 'Kağıt ayarları kaydedildi')
+      qc.invalidateQueries({ queryKey: ['settings'] })
+    },
+    onError: () => toast.show('error', 'Kaydedilemedi'),
+  })
+
+  // Etiket Ayarları: hücre içi baskı alanı boşluğu (LabelPaddingBox ile sürüklenerek ayarlanır).
+  const [padding, setPadding] = useState(layout.paddingMm)
+  useEffect(() => setPadding(layout.paddingMm), [layout.paddingMm])
+  const paddingDirty = padding !== layout.paddingMm
+
+  const savePadding = useMutation({
+    mutationFn: () => updateSetting(LABEL_LAYOUT_KEY, JSON.stringify({ ...layout, paddingMm: padding })),
+    onSuccess: () => {
+      toast.show('success', 'Etiket ayarları kaydedildi')
+      qc.invalidateQueries({ queryKey: ['settings'] })
+    },
+    onError: () => toast.show('error', 'Kaydedilemedi'),
+  })
 
   const bySku = useMemo(() => {
     const m = new Map<string, Product>()
@@ -165,37 +251,95 @@ export function ManualOrderPage() {
           </div>
 
           <div className="space-y-4">
+            <h2 className="text-base font-semibold text-gray-800">Etiket</h2>
+
             <div>
-              <span className="mb-1 block text-sm font-medium text-gray-700">Etiket Önizleme</span>
-              <div className="flex min-h-[160px] items-center justify-center rounded border bg-gray-50 p-2">
-                {previewUrl ? (
-                  <img src={previewUrl} alt="etiket önizleme" className="max-w-full" />
-                ) : (
-                  <span className="text-sm text-gray-400">Ürün seçince önizleme görünür</span>
-                )}
+              <span className="mb-1 block text-sm font-medium text-gray-700">Etiket Ayarları</span>
+              <p className="mb-2 text-xs text-gray-400">
+                Kutu, sayfadan türetilen hücre ebadını ({layout.labelWidthMm}×{layout.labelHeightMm} mm)
+                yansıtır. İçindeki kutuyu sağ-alt köşeden sürükleyerek baskı alanı (kenar boşluğu:{' '}
+                {padding} mm) ayarlanır.
+              </p>
+              <LabelPaddingBox
+                labelWidthMm={layout.labelWidthMm}
+                labelHeightMm={layout.labelHeightMm}
+                paddingMm={padding}
+                onPaddingChange={setPadding}
+                previewUrl={previewUrl}
+              />
+              <div className="mt-2 flex flex-wrap gap-2">
+                <button
+                  onClick={() => savePadding.mutate()}
+                  disabled={!paddingDirty || savePadding.isPending}
+                  className="h-9 rounded bg-gray-900 px-3 text-sm font-medium text-white disabled:opacity-40"
+                >
+                  {savePadding.isPending ? 'Kaydediliyor…' : 'Etiket Ayarlarını Kaydet'}
+                </button>
+                <button
+                  onClick={() =>
+                    downloadLabelBmp(
+                      previewLines,
+                      `etiket-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '')}`,
+                    )
+                  }
+                  disabled={items.length === 0}
+                  className="h-9 rounded border border-gray-300 px-3 text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-40"
+                >
+                  .bmp indir
+                </button>
               </div>
-              <button
-                onClick={() =>
-                  downloadLabelBmp(
-                    previewLines,
-                    `etiket-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '')}`,
-                  )
-                }
-                disabled={items.length === 0}
-                className="mt-2 h-9 rounded border border-gray-300 px-3 text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-40"
-              >
-                .bmp indir
-              </button>
             </div>
 
             <div>
-              <span className="mb-1 block text-sm font-medium text-gray-700">
-                Yazdırılacak hücre ({cells > 0 ? cell + 1 : 0}/{cells})
-              </span>
+              <div className="mb-1 flex flex-wrap items-end justify-between gap-2">
+                <span className="text-sm font-medium text-gray-700">
+                  Kağıt Ayarları ({cells > 0 ? cell + 1 : 0}/{cells})
+                </span>
+                <PaperSizeFields
+                  pageWidthMm={paper.pageWidthMm}
+                  pageHeightMm={paper.pageHeightMm}
+                  onChange={(patch) => setPaper((p) => ({ ...p, ...patch }))}
+                />
+              </div>
               <p className="mb-2 text-xs text-gray-400">
-                Şablonlu sticker sayfasında etiketin basılacağı konumu seçin. Yerleşim Ayarlar'dan
-                düzenlenir.
+                Şablonlu sticker sayfasında etiketin basılacağı konumu seçin. Etiket ebadı, sayfa ile
+                sütun/satır sayısından otomatik hesaplanır — sayfada boş alan kalmaz.
               </p>
+
+              <div className="mb-3 flex flex-wrap items-end gap-2 text-xs text-gray-600">
+                <label>
+                  Sütun
+                  <input
+                    type="number"
+                    min={1}
+                    value={paper.columns}
+                    onChange={(e) =>
+                      setPaper((p) => ({ ...p, columns: Math.max(1, Number(e.target.value) || 1) }))
+                    }
+                    className="mt-1 block h-8 w-16 rounded border border-gray-300 px-2"
+                  />
+                </label>
+                <label>
+                  Satır
+                  <input
+                    type="number"
+                    min={1}
+                    value={paper.rows}
+                    onChange={(e) =>
+                      setPaper((p) => ({ ...p, rows: Math.max(1, Number(e.target.value) || 1) }))
+                    }
+                    className="mt-1 block h-8 w-16 rounded border border-gray-300 px-2"
+                  />
+                </label>
+                <button
+                  onClick={() => savePaper.mutate()}
+                  disabled={!paperDirty || savePaper.isPending}
+                  className="h-8 rounded bg-gray-900 px-3 text-xs font-medium text-white disabled:opacity-40"
+                >
+                  {savePaper.isPending ? 'Kaydediliyor…' : 'Kağıt Ayarlarını Kaydet'}
+                </button>
+              </div>
+
               <SheetPreview
                 layout={layout}
                 selected={cells > 0 ? Math.min(cell, cells - 1) : undefined}

@@ -36,9 +36,29 @@ export function parseLayout(settings: Record<string, string> | undefined): Label
   const raw = settings?.[LABEL_LAYOUT_KEY]
   if (!raw) return DEFAULT_LAYOUT
   try {
-    return { ...DEFAULT_LAYOUT, ...(JSON.parse(raw) as Partial<LabelLayout>) }
+    return normalizeLayout({ ...DEFAULT_LAYOUT, ...(JSON.parse(raw) as Partial<LabelLayout>) })
   } catch {
     return DEFAULT_LAYOUT
+  }
+}
+
+// normalizeLayout, etiket ebadını her zaman sayfayı boşluksuz dolduracak şekilde
+// (int(sayfa eni / sütun), int(sayfa boyu / satır)) yeniden hesaplar; etiket eni/boyu
+// artık serbestçe girilemez, sayfa + sütun/satır sayısından türetilir. Kenar/aralık
+// boşlukları da bu yüzden sıfırlanır — aksi halde tam doldurma garanti edilemez.
+export function normalizeLayout(l: LabelLayout): LabelLayout {
+  const columns = Math.max(1, Math.floor(l.columns) || 1)
+  const rows = Math.max(1, Math.floor(l.rows) || 1)
+  return {
+    ...l,
+    columns,
+    rows,
+    marginTopMm: 0,
+    marginLeftMm: 0,
+    gapXMm: 0,
+    gapYMm: 0,
+    labelWidthMm: Math.floor(l.pageWidthMm / columns),
+    labelHeightMm: Math.floor(l.pageHeightMm / rows),
   }
 }
 

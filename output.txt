@@ -161,3 +161,37 @@ Müşteri    : deneme birki
 Toplam     : 1961.00 TL
 ========================================
 
+========================================
+Tarih      : 2026-06-23 08:39:37
+Sipariş No : MAN-20260623-083937
+Durum      : Yeni Sipariş
+Müşteri    : Bilinmiyor
+----------------------------------------
+Ürünler:
+1 x Kizilcik Marmelati 700 g (650.00 TL)
+----------------------------------------
+Toplam     : 650.00 TL
+========================================
+
+========================================
+Tarih      : 2026-06-23 08:43:02
+Sipariş No : MAN-20260623-084302
+Durum      : Yeni Sipariş
+Müşteri    : Bilinmiyor
+----------------------------------------
+Ürünler:
+1 x Kizilcik Marmelati 700 g (650.00 TL)
+1 x Çanakkale Ezine 700 g (455.00 TL)
+1 x Çiçek Bali 800 g (850.00 TL)
+1 x Çilek Reçeli 700 g (600.00 TL)
+1 x Çanakkale Sepet 500 g (325.00 TL)
+1 x Test Urun 250 g (123.00 TL)
+1 x Kaymakli Inek Yogurdu 1 kg (250.00 TL)
+1 x Trabzon Tereyagi 500 g (850.00 TL)
+1 x Yaprak Sarma 500 g (400.00 TL)
+1 x Çilek Reçeli 700 g (600.00 TL)
+1 x Incir Reçeli 700 g (600.00 TL)
+----------------------------------------
+Toplam     : 5703.00 TL
+========================================
+
