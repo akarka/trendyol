@@ -4,6 +4,7 @@ import { Layout } from '../components/Layout'
 import { LoginPage } from '../pages/LoginPage'
 import { OrdersPage } from '../pages/OrdersPage'
 import { ManualOrderPage } from '../pages/ManualOrderPage'
+import { ProductsPage } from '../pages/ProductsPage'
 import { PrinterPage } from '../pages/PrinterPage'
 import { SettingsPage } from '../pages/SettingsPage'
 import { BackupPage } from '../pages/BackupPage'
@@ -30,6 +31,7 @@ export function AppRouter() {
       >
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/manual" element={<ManualOrderPage />} />
+        <Route path="/products" element={<ProductsPage />} />
         <Route path="/printer" element={<PrinterPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/backup" element={<BackupPage />} />

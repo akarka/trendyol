@@ -92,6 +92,69 @@ func GetProducts(db *sqlx.DB, activeOnly bool) ([]ProductView, error) {
 	return out, err
 }
 
+// GetCategoryNames, dropdown/öneri için kategori adlarını döner.
+func GetCategoryNames(db *sqlx.DB) ([]string, error) {
+	out := []string{}
+	err := db.Select(&out, "SELECT name FROM categories ORDER BY name")
+	return out, err
+}
+
+// GetBrandNames, dropdown/öneri için marka adlarını döner.
+func GetBrandNames(db *sqlx.DB) ([]string, error) {
+	out := []string{}
+	err := db.Select(&out, "SELECT name FROM brands ORDER BY name")
+	return out, err
+}
+
+// CreateProduct, yeni ürün ekler. SKU zaten varsa hata döner (üstte ER_DUP_ENTRY kontrolü yapılır).
+func CreateProduct(db *sqlx.DB, p Product) error {
+	_, err := db.Exec(
+		`INSERT INTO products
+		   (sku, barcode, name, marketplace_name, category_id, brand_id, net_weight, unit, price, vat_rate, is_active, needs_fix, description)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		p.SKU, p.Barcode, p.Name, p.MarketplaceName, p.CategoryID, p.BrandID, p.NetWeight, p.Unit,
+		p.Price, p.VATRate, p.IsActive, p.NeedsFix, p.Description,
+	)
+	return err
+}
+
+// UpdateProduct, sku PK'sı sabit kalmak üzere var olan ürünü günceller.
+// RowsAffected, değer değişmediğinde de 0 dönebildiğinden (MySQL davranışı) varlık kontrolü ayrı yapılır.
+func UpdateProduct(db *sqlx.DB, sku string, p Product) error {
+	exists, err := ProductExists(db, sku)
+	if err != nil {
+		return err
+	}
+	if !exists {
+		return sql.ErrNoRows
+	}
+	_, err = db.Exec(
+		`UPDATE products SET
+		   barcode=?, name=?, marketplace_name=?, category_id=?, brand_id=?, net_weight=?, unit=?,
+		   price=?, vat_rate=?, is_active=?, needs_fix=?, description=?
+		 WHERE sku = ?`,
+		p.Barcode, p.Name, p.MarketplaceName, p.CategoryID, p.BrandID, p.NetWeight, p.Unit,
+		p.Price, p.VATRate, p.IsActive, p.NeedsFix, p.Description, sku,
+	)
+	return err
+}
+
+// DeleteProduct, ürünü kataloğdan siler.
+func DeleteProduct(db *sqlx.DB, sku string) error {
+	res, err := db.Exec("DELETE FROM products WHERE sku = ?", sku)
+	if err != nil {
+		return err
+	}
+	n, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if n == 0 {
+		return sql.ErrNoRows
+	}
+	return nil
+}
+
 // GetProductBySKU, tek ürünü döner (manuel sipariş satırı zenginleştirme).
 func GetProductBySKU(db *sqlx.DB, sku string) (*ProductView, error) {
 	var p ProductView
