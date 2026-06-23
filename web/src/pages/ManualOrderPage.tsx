@@ -117,11 +117,11 @@ export function ManualOrderPage() {
             <div className="space-y-2">
               <span className="block text-sm font-medium text-gray-700">Ürünler</span>
               {rows.map((row, i) => (
-                <div key={i} className="flex gap-2">
+                <div key={i} className="grid grid-cols-[minmax(0,1fr)_3.5rem_2.5rem] gap-2">
                   <select
                     value={row.sku}
                     onChange={(e) => setRow(i, { sku: e.target.value })}
-                    className="h-10 min-w-0 flex-1 rounded border border-gray-300 px-2 text-sm"
+                    className="h-10 w-full min-w-0 rounded border border-gray-300 px-2 text-sm"
                   >
                     <option value="">Ürün seç…</option>
                     {(products ?? []).map((p) => (
@@ -135,12 +135,12 @@ export function ManualOrderPage() {
                     min={1}
                     value={row.quantity}
                     onChange={(e) => setRow(i, { quantity: Math.max(1, Number(e.target.value) || 1) })}
-                    className="h-10 w-16 rounded border border-gray-300 px-2 text-sm"
+                    className="h-10 w-full min-w-0 rounded border border-gray-300 px-2 text-sm"
                   />
                   <button
                     onClick={() => removeRow(i)}
                     disabled={rows.length === 1}
-                    className="h-10 w-10 shrink-0 rounded border border-gray-300 text-gray-500 disabled:opacity-40"
+                    className="h-10 w-full rounded border border-gray-300 text-gray-500 disabled:opacity-40"
                     title="Satırı sil"
                   >
                     ×

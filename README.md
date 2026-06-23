@@ -91,6 +91,37 @@ Farklı durumlar için `-Status` ekleyin:
 
 ---
 
+## Web Arayüzü Sayfaları
+
+| Sayfa | Yol | Ne işe yarar |
+|---|---|---|
+| Siparişler | `/orders` | Gelen/elle girilen siparişleri listele, durum filtrele, yeniden yazdır, **Excel'e Aktar**. |
+| Manuel Sipariş | `/manual` | Trendyol panelinden gelen siparişi elle girip etiket bas. |
+| Ürünler | `/products` | Ürün kataloğunu listele/ara, **yeni ürün ekle**, **düzenle**, **sil**. Kategori/marka alanları mevcut değerleri önerir, yeni yazılan otomatik oluşturulur. |
+| Yazıcı | `/printer` | Yazıcı durumu ve son baskı işleri. |
+| Ayarlar | `/settings` | Etiket yerleşimi (A4 sticker) ve diğer ayarlar. |
+| Yedekleme | `/backup` | Veritabanı tam yedeği indir/geri yükle, ürün kataloğu içe aktar (bkz. aşağıdaki bölüm). |
+
+## Veri Yönetimi (Yedekleme / İçe-Dışa Aktarma)
+
+**Yedekleme** sayfası (`/backup`) üç işlevi tek yerde toplar:
+
+1. **Veritabanı Yedeği** — tüm tabloların (`trendyol_orders`, `products`, `users`, `print_jobs`, `settings`) tam yedeğini `.sql.gz` olarak indirir (`mysqldump` tabanlı, `GET /api/admin/backup`).
+2. **Geri Yükleme** — yüklenen `.sql`/`.sql.gz` dosyasıyla veritabanını **tamamen değiştirir** (`mysql` CLI tabanlı, `POST /api/admin/restore`). Geri alınamaz; mevcut tüm veri silinir, dosyadakiyle değişir.
+3. **Ürün İçe Aktarma** — katalog şablonundaki (bkz. `cmd/export-products` çıktısı) CSV/XLSX'i yükler; **SKU'su veritabanında zaten olan satırlar atlanır**, sadece yeni ürünler eklenir (`POST /api/products/import`, arka planda `import-products --skip-duplicates`).
+
+Siparişler sayfasındaki **Excel'e Aktar** butonu (`GET /api/orders/export`) ise seçili durum filtresine göre sipariş listesini `.xlsx` olarak indirir.
+
+> Ürün kataloğunun **tam round-trip** (işletmenin Excel'de toplu düzeltip geri yüklediği) akışı hâlâ CLI üzerinden çalışır — bkz. [docs/sessions/S08-manuel-siparis-katalog.md](docs/sessions/S08-manuel-siparis-katalog.md):
+> ```powershell
+> docker compose run --rm -v "${PWD}:/out" print-relay ./export-products --out /out/urunler.xlsx
+> # işletme düzeltir →
+> docker compose run --rm -v "${PWD}:/out" print-relay ./import-products --file /out/urunler.xlsx
+> ```
+> Bu CLI akışı **upsert**'tir (mevcut SKU güncellenir); web'deki içe aktarma ise **atlar** (mevcut SKU dokunulmaz). İhtiyacına göre seçin.
+
+---
+
 ## Sıkça Sorulan Sorular
 
 **Bilgisayarı kapatıp açınca?**
@@ -112,6 +143,12 @@ Test modunda tüm çıktılar proje klasöründeki `output.txt` dosyasına alt a
 Proje klasöründe terminal açıp sırayla:
 1. `git pull`
 2. `docker compose up -d --build`
+
+**Düzenli yedek nasıl alırım?**
+Web arayüzünde **Yedekleme** (`/backup`) sayfasından "Yedek İndir" butonuyla `.sql.gz` indirin. Geri yüklemek için aynı sayfada dosyayı seçip "Geri Yükle" — bu işlem mevcut tüm veriyi siler ve dosyadakiyle değiştirir, dikkatli kullanın.
+
+**`docker compose down -v` sonrası yedekleme/geri yükleme "Plugin caching_sha2_password" hatası veriyor?**
+Volume sıfırdan oluşturulurken `docs/init-auth.sh` otomatik çalışıp DB kullanıcısını `mysql_native_password`'e çevirir (alpine tabanlı `mysqldump`/`mysql` CLI, MySQL 8'in varsayılan `caching_sha2_password` eklentisini desteklemiyor). Eğer eski bir volume'den geliyorsanız ve hata alıyorsanız: `docker compose down -v` ile volume'ü sıfırlayıp tekrar `up` edin (DİKKAT: tüm veri silinir) ya da root ile elle `ALTER USER '<MYSQL_USER>'@'%' IDENTIFIED WITH mysql_native_password BY '<MYSQL_PASSWORD>';` çalıştırın.
 
 ---
 *Hazırlayan: Zze*

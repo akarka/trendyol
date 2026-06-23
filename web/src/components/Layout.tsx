@@ -74,13 +74,15 @@ export function Layout() {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `flex flex-1 flex-col items-center gap-0.5 py-2 text-xs ${
+                `flex min-w-0 flex-1 flex-col items-center gap-0.5 py-2 ${
                   isActive ? 'text-gray-900' : 'text-gray-400'
                 }`
               }
             >
               <span className="text-lg">{item.icon}</span>
-              {item.label}
+              <span className="w-full truncate px-0.5 text-center text-[10px] leading-tight">
+                {item.label}
+              </span>
             </NavLink>
           ))}
         </nav>

@@ -9,4 +9,5 @@ body,
 }
 body {
   @apply bg-gray-100 text-gray-900 antialiased;
+  overflow-x: hidden;
 }
