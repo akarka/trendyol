@@ -52,6 +52,13 @@ func UpsertLookup(db *sqlx.DB, table, name string) (int64, error) {
 	return res.LastInsertId()
 }
 
+// ProductExists, sku zaten products tablosunda var mı diye bakar (mükerrer atlama importu için).
+func ProductExists(db *sqlx.DB, sku string) (bool, error) {
+	var exists bool
+	err := db.Get(&exists, "SELECT EXISTS(SELECT 1 FROM products WHERE sku = ?)", sku)
+	return exists, err
+}
+
 func UpsertProduct(db *sqlx.DB, p Product) error {
 	_, err := db.Exec(
 		`INSERT INTO products

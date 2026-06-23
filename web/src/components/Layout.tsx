@@ -6,6 +6,7 @@ const NAV = [
   { to: '/manual', label: 'Manuel Sipariş', icon: '✍️' },
   { to: '/printer', label: 'Yazıcı', icon: '🖨️' },
   { to: '/settings', label: 'Ayarlar', icon: '⚙️' },
+  { to: '/backup', label: 'Yedekleme', icon: '🗄️' },
 ]
 
 export function Layout() {

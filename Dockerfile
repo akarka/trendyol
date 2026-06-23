@@ -26,6 +26,9 @@ FROM alpine:latest
 
 WORKDIR /app
 
+# mysqldump/mysql CLI: DB yedek/geri yükleme (internal/server/admin.go)
+RUN apk add --no-cache mysql-client
+
 COPY --from=builder /app/print-relay .
 COPY --from=builder /app/seed .
 COPY --from=builder /app/import-products .

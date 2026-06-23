@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { getOrders, OrderRow, printOrder } from '../api/orders'
+import { exportOrders, getOrders, OrderRow, printOrder } from '../api/orders'
 import { Badge } from '../components/Badge'
 import { Spinner } from '../components/Spinner'
 import { OrderDetailModal } from '../components/OrderDetailModal'
@@ -43,11 +43,25 @@ export function OrdersPage() {
     setPage(0)
   }
 
+  const exportMutation = useMutation({
+    mutationFn: () => exportOrders(status),
+    onError: () => toast.show('error', 'Excel oluşturulamadı'),
+  })
+
   const orders = data ?? []
 
   return (
     <div>
-      <h1 className="mb-4 text-xl font-semibold">Siparişler</h1>
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="text-xl font-semibold">Siparişler</h1>
+        <button
+          onClick={() => exportMutation.mutate()}
+          disabled={exportMutation.isPending}
+          className="h-9 rounded border border-gray-300 bg-white px-3 text-sm font-medium text-gray-700 disabled:opacity-50"
+        >
+          {exportMutation.isPending ? '...' : 'Excel’e Aktar'}
+        </button>
+      </div>
 
       <div className="mb-4 flex flex-wrap gap-2">
         {STATUSES.map((s) => (

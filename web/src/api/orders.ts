@@ -1,4 +1,5 @@
 import client from './client'
+import { downloadBlobResponse } from '../lib/download'
 
 export interface OrderLine {
   productName: string
@@ -58,6 +59,14 @@ export async function getOrder(orderID: string): Promise<OrderRow> {
 export async function printOrder(orderID: string): Promise<{ job_id: number; status: string }> {
   const { data } = await client.post(`/api/orders/${orderID}/print`)
   return data
+}
+
+export async function exportOrders(status: string): Promise<void> {
+  const res = await client.get('/api/orders/export', {
+    params: { status: status || undefined },
+    responseType: 'blob',
+  })
+  downloadBlobResponse(res, 'siparisler.xlsx')
 }
 
 export interface ManualOrderLine {

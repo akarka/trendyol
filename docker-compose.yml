@@ -27,7 +27,9 @@ services:
   mysql:
     image: mysql:8
     restart: unless-stopped
-    command: --log-error-verbosity=1
+    # mysql-native-password: alpine mariadb-client (mysqldump/mysql CLI, bkz. docs/init-auth.sh)
+    # caching_sha2_password'ü desteklemiyor; MySQL 8.4'te bu eklenti varsayılan kapalı.
+    command: --log-error-verbosity=1 --mysql-native-password=ON
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: trendyol
@@ -38,6 +40,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./docs/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./docs/init-auth.sh:/docker-entrypoint-initdb.d/init-auth.sh
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s

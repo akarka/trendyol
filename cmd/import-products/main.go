@@ -24,6 +24,7 @@ import (
 
 func main() {
 	file := flag.String("file", "data/urun_listesi.utf8.csv", "kaynak dosya (.csv veya .xlsx)")
+	skipDuplicates := flag.Bool("skip-duplicates", false, "DB'de SKU zaten varsa güncelleme yerine atla")
 	flag.Parse()
 
 	dsn := os.Getenv("MYSQL_DSN")
@@ -62,7 +63,7 @@ func main() {
 	seenSKU := map[string]int{}
 	seenBarcode := map[string]int{}
 
-	var imported, flagged int
+	var imported, flagged, skipped int
 	var issues []string
 
 	for i, row := range rows[1:] {
@@ -111,6 +112,18 @@ func main() {
 			issues = append(issues, fmt.Sprintf("satır %d: gramaj eksik/0 (%s)", i+2, name))
 		}
 
+		if *skipDuplicates {
+			exists, err := db.ProductExists(conn, sku)
+			if err != nil {
+				log.Fatalf("SKU kontrolü başarısız (%s): %v", sku, err)
+			}
+			if exists {
+				skipped++
+				issues = append(issues, fmt.Sprintf("satır %d: SKU %s zaten var, atlandı", i+2, sku))
+				continue
+			}
+		}
+
 		catID, err := lookup(conn, catCache, "categories", category)
 		if err != nil {
 			log.Fatalf("kategori upsert hatası (%s): %v", category, err)
@@ -148,7 +161,7 @@ func main() {
 		}
 	}
 
-	log.Printf("import tamam: %d ürün (%d kategori, %d marka). needs_fix: %d", imported, len(catCache), len(brandCache), flagged)
+	log.Printf("import tamam: %d ürün (%d kategori, %d marka). needs_fix: %d, atlanan (mevcut SKU): %d", imported, len(catCache), len(brandCache), flagged, skipped)
 	if len(issues) > 0 {
 		log.Printf("--- işaretlenen sorunlar (%d) ---", len(issues))
 		for _, s := range issues {

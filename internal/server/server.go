@@ -57,6 +57,10 @@ func New(cfg *config.Config, db *sqlx.DB, printCh chan<- PrintTask, static fs.FS
 		r.Get("/api/logs", s.handleLogs)
 		r.Get("/api/settings", s.handleGetSettings)
 		r.Put("/api/settings/{key}", s.handlePutSetting)
+		r.Get("/api/orders/export", s.handleOrdersExport)
+		r.Get("/api/admin/backup", s.handleDBBackup)
+		r.Post("/api/admin/restore", s.handleDBRestore)
+		r.Post("/api/products/import", s.handleProductsImport)
 	})
 
 	r.Handle("/*", spaHandler(static))
