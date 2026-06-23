@@ -13,6 +13,7 @@ import (
 
 	"github.com/akarka/trendyol/config"
 	"github.com/akarka/trendyol/internal/auth"
+	"github.com/akarka/trendyol/internal/exporter"
 	"github.com/akarka/trendyol/internal/parser"
 )
 
@@ -23,14 +24,15 @@ type PrintTask struct {
 }
 
 type Server struct {
-	cfg     *config.Config
-	db      *sqlx.DB
-	printCh chan<- PrintTask
-	router  *chi.Mux
+	cfg      *config.Config
+	db       *sqlx.DB
+	printCh  chan<- PrintTask
+	exporter *exporter.Exporter
+	router   *chi.Mux
 }
 
-func New(cfg *config.Config, db *sqlx.DB, printCh chan<- PrintTask, static fs.FS) *Server {
-	s := &Server{cfg: cfg, db: db, printCh: printCh}
+func New(cfg *config.Config, db *sqlx.DB, printCh chan<- PrintTask, exp *exporter.Exporter, static fs.FS) *Server {
+	s := &Server{cfg: cfg, db: db, printCh: printCh, exporter: exp}
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -55,6 +57,7 @@ func New(cfg *config.Config, db *sqlx.DB, printCh chan<- PrintTask, static fs.FS
 		r.Get("/api/products", s.handleListProducts)
 		r.Get("/api/printer/status", s.handlePrinterStatus)
 		r.Get("/api/logs", s.handleLogs)
+		r.Post("/api/export/print-jobs", s.handleExportPrintJobs)
 		r.Get("/api/settings", s.handleGetSettings)
 		r.Put("/api/settings/{key}", s.handlePutSetting)
 	})

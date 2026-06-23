@@ -3,11 +3,13 @@ package main
 import (
 	"log"
 	"time"
+	_ "time/tzdata" // alpine'de tzdata olmadan EXPORT_TZ (Europe/Istanbul) yüklenebilsin
 
 	"github.com/jmoiron/sqlx"
 
 	"github.com/akarka/trendyol/config"
 	"github.com/akarka/trendyol/internal/db"
+	"github.com/akarka/trendyol/internal/exporter"
 	"github.com/akarka/trendyol/internal/printer"
 	"github.com/akarka/trendyol/internal/server"
 	"github.com/akarka/trendyol/web"
@@ -39,7 +41,13 @@ func main() {
 	printCh := make(chan server.PrintTask, 64)
 	go runPrinter(printCh, database, cfg)
 
-	srv := server.New(cfg, database, printCh, web.Dist())
+	exp := exporter.New(database, cfg.ExportDir, cfg.ExportTZ, exporter.NoopUploader{})
+	if cfg.ExportEnabled {
+		go exp.RunDaily(cfg.ExportHour)
+		log.Printf("[EXPORT] günlük export aktif: saat %02d:00 (%s), dizin %s", cfg.ExportHour, cfg.ExportTZ, cfg.ExportDir)
+	}
+
+	srv := server.New(cfg, database, printCh, exp, web.Dist())
 	if err := srv.Start(":8080"); err != nil {
 		log.Fatalf("[SUNUCU_HATASI] %v", err)
 	}

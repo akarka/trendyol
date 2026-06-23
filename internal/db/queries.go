@@ -136,6 +136,17 @@ func GetPrintJobs(db *sqlx.DB, limit int) ([]PrintJob, error) {
 	return jobs, err
 }
 
+// GetPrintJobsBetween, [start, end) yarı-açık aralığındaki print job'ları kronolojik döner.
+func GetPrintJobsBetween(db *sqlx.DB, start, end time.Time) ([]PrintJob, error) {
+	jobs := []PrintJob{}
+	err := db.Select(&jobs,
+		`SELECT id, order_id, status, error_msg, attempted_at
+		 FROM print_jobs WHERE attempted_at >= ? AND attempted_at < ?
+		 ORDER BY attempted_at ASC`,
+		start, end)
+	return jobs, err
+}
+
 func GetSettings(db *sqlx.DB) (map[string]string, error) {
 	rows, err := db.Queryx("SELECT `key`, value FROM settings")
 	if err != nil {

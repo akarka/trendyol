@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 
@@ -96,6 +97,27 @@ func (s *Server) handleLogs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, jobs)
+}
+
+// handleExportPrintJobs, ?date=YYYY-MM-DD (varsayılan: bugün) gününün print
+// job'larını CSV'ye export eder. DB'den yeniden üretir; tekrar tekrar çağrılabilir.
+func (s *Server) handleExportPrintJobs(w http.ResponseWriter, r *http.Request) {
+	day := time.Now()
+	if ds := r.URL.Query().Get("date"); ds != "" {
+		d, err := time.Parse("2006-01-02", ds)
+		if err != nil {
+			writeError(w, http.StatusBadRequest, "geçersiz tarih, format: YYYY-MM-DD")
+			return
+		}
+		day = d
+	}
+
+	path, n, err := s.exporter.ExportDay(day)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "export başarısız: "+err.Error())
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]interface{}{"file": path, "count": n})
 }
 
 func (s *Server) handleGetSettings(w http.ResponseWriter, r *http.Request) {

@@ -12,3 +12,6 @@ tmp/
 *.xlsx
 ~$*
 *.zip
+# print job CSV export çıktıları (dizin korunur)
+/exports/*.csv
+/exports/.tmp-*.csv
